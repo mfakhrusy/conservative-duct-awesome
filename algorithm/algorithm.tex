@@ -1,0 +1,218 @@
+\documentclass[12pt]{article}
+\usepackage
+[
+        a4paper,% other options: a3paper, a5paper, etc
+        left=2cm,
+        right=2cm,
+        top=3cm,
+        bottom=4cm,
+        % use vmargin=2cm to make vertical margins equal to 2cm.
+        % us  hmargin=3cm to make horizontal margins equal to 3cm.
+        % use margin=3cm to make all margins  equal to 3cm.
+]{geometry}
+\usepackage{amsmath}
+\newenvironment{rcases}
+	{\left.\begin{aligned}}
+	{\end{aligned}\hspace{1.5em}\right\rbrace}
+
+\usepackage{amssymb}
+\usepackage{flexisym}
+
+\begin{document}
+{\huge \centering Algorithm of Conservative Convergent-Divergent Duct}
+
+\begin{enumerate}
+	\item Input nodes, parameters, and constant variables
+	\item Process Duct Geometry with equation:
+		\begin{equation}
+			A = 1 + 2.2\left(x - 1.5\right)^{2}\hspace{2em}0\leq x \leq 3
+		\end{equation}
+	\item Calculate $\Delta x$
+	\item Calculate initial conditions for $i = 1 \sim i = n - 2$ (c-like array)
+	\begin{enumerate}
+		\item Initial condition for $\rho\textprime$ and $T\textprime$:
+			\begin{equation}
+				\begin{rcases}
+					\rho\textprime	&= 1.0 \\
+					T\textprime	&= 1.0
+				\end{rcases}
+				\hspace{1em}for\hspace{1em}0\leq x\textprime \leq 0.5
+			\end{equation}
+			\begin{equation}
+				\begin{rcases}
+					\rho\textprime	&= 1.0 - 0.366\left(x\textprime - 0.5\right)\\
+					T\textprime	&= 1.0 - 0.167\left(x\textprime - 0.5\right)
+				\end{rcases}
+				\hspace{1em}for\hspace{1em}0.5 < x\textprime \leq 1.5
+			\end{equation}
+			\begin{equation}
+				\begin{rcases}
+					\rho\textprime	&= 0.634 - 0.702\left(x\textprime - 1.5\right)\\
+					T\textprime	&= 0.833 - 0.4908\left(x\textprime - 1.5\right)
+				\end{rcases}
+				\hspace{1em}for\hspace{1em}1.5 < x\textprime \leq 2.1
+			\end{equation}
+			\begin{equation}
+				\begin{rcases}
+					\rho\textprime	&= 0.5892 + 0.10228\left(x\textprime - 2.1\right)\\
+					T\textprime	&= 0.93968 + 0.0622\left(x\textprime - 2.1\right)
+				\end{rcases}
+				\hspace{1em}for\hspace{1em}2.1 < x\textprime \leq 3.0
+			\end{equation}
+		\item Initial condition for $v\textprime$ (use constant mass flow):
+			\begin{equation}
+				v\textprime = \frac{U_{2}}{\rho\textprime A\textprime} = \frac{0.59}{\rho\textprime A\textprime}
+			\end{equation}
+		\item Initial conditions for $U_{1}$, $U_{2}$, and $U_{3}$:
+			\begin{align}
+				U_{1}	&=	\rho\textprime A\textprime \\
+				U_{2}	&=	\rho\textprime A\textprime v\textprime \\
+				U_{3}	&=	\rho\textprime\left(\frac{e\textprime}{\gamma - 1} + \frac{\gamma}{2}v\textprime^{2}\right)A\textprime\hspace{1em};\hspace{1em}e\textprime = T\textprime
+			\end{align}
+	\end{enumerate}
+	\item Looping Process
+	\begin{enumerate}
+		\item Calculate $a\textprime$:
+			\begin{equation}
+				a\textprime = \sqrt{\gamma R T\textprime}
+			\end{equation}
+
+		\item Calculate $\Delta t$ from each grid, and choose the maximum value:
+			\begin{equation}
+				\Delta t\textprime = C\frac{\Delta x\textprime}{a_{i}\textprime + v_{i}\textprime}\hspace{1em};\hspace{1em}0 < C \leq 1
+			\end{equation}
+		\item Predictor Step
+		\begin{enumerate}
+			\item Calculate boundary conditions (BC) for $i = n-1$ (subsonic outflow):
+				\par BC for $U_{1}$ and $U_{2}$:
+				\begin{align}
+					U_{1_{i=n-1}} &= 2U_{1_{i=n-2}} - U_{1_{i=n-3}} \\
+					U_{2_{i=n-1}} &= 2U_{2_{i=n-2}} - U_{2_{i=n-3}}
+				\end{align}
+				\par BC for $v\textprime$:
+				\begin{equation}
+					v_{n-1}\textprime = \frac{U_{2_{n-1}}}{U_{1_{n-1}}}
+				\end{equation}
+				\par BC for $U_{3}$:
+				\begin{equation}
+					U_{3} 	= \frac{P\textprime_{n-1}A\textprime}{\gamma - 1} + \frac{\gamma}{2}U_{2_{n-1}}v\textprime_{n-1} \\
+				\end{equation}
+				\par choose $P\textprime_{n-1} = 0.6784$.
+			\item Calculate $F_{1}$, $F_{2}$, $F_{3}$ for $i = 1 \sim i = n - 1$ and $J_{2}$ for $i = 1 \sim i = n - 2$:
+				\par $F_{1}$, $F_{2}$, and $F_{3}$:
+				\begin{align}
+					F_{1}	&= U_{2} \\
+					F_{2}	&= \frac{U_{2}^{2}}{U_{1}} + \frac{\gamma - 1}{\gamma}\left(U_{3} - \frac{\gamma}{2}\frac{U_{2}^{2}}{U_{1}}\right) \\
+					F_{3}	&= \gamma\frac{U_{2}U_{3}}{U_{1}} - \frac{\gamma\left(\gamma - 1\right)}{2}\frac{U_{2}^{3}}{U_{1}^{2}}
+				\end{align}
+				\par $J_{2}$:
+				\begin{align}
+					J_{2} 	&= \frac{\gamma - 1}{\gamma}\left(U_{3} - \frac{\gamma}{2}\frac{U_{2}^{2}}{U_{1}}\right)\frac{\partial\left(ln A\textprime\right)}{\partial x\textprime} \\
+						&= \frac{1}{\gamma}\rho\textprime T\textprime\frac{\partial A\textprime}{\partial x\textprime}
+				\end{align}
+			\item Calculate time derivative of $U_1$, $U_2$, and $U_3$ using forward difference from $i = 1 \sim i = n - 2$:
+				\begin{align}
+					\frac{\partial U_1}{\partial t\textprime} &= - \frac{\partial F_1}{\partial x\textprime}\\
+					\frac{\partial U_2}{\partial t\textprime} &= - \frac{\partial F_2}{\partial x\textprime} + J_2 \\
+					\frac{\partial U_3}{\partial t\textprime} &= - \frac{\partial F_3}{\partial x\textprime}
+				\end{align}
+				\par In finite difference form:
+				\begin{align}
+					\left(\frac{U_1}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(F_{1}\right)_{i+1} - \left(F_{1}\right)_{i}}{\Delta x\textprime}\right) \\
+					\left(\frac{U_2}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(F_{2}\right)_{i+1} - \left(F_{2}\right)_{i}}{\Delta x\textprime}\right) \\
+					\left(\frac{U_3}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(F_{3}\right)_{i+1} - \left(F_{3}\right)_{i}}{\Delta x\textprime}\right)
+				\end{align}
+
+			\item Compute the predicted value from $i = 1 \sim i = n - 2$:
+				\begin{align}
+					\left(\overline{U}_{1}\right)_{i}^{n+1} &= \left(U_{1}\right)_{i}^{n} + \left(\frac{\partial U_{1}}{\partial t\textprime}\right)_{i}^{n}\Delta t\textprime \\
+					\left(\overline{U}_{2}\right)_{i}^{n+1} &= \left(U_{2}\right)_{i}^{n} + \left(\frac{\partial U_{2}}{\partial t\textprime}\right)_{i}^{n}\Delta t\textprime \\
+					\left(\overline{U}_{3}\right)_{i}^{n+1} &= \left(U_{3}\right)_{i}^{n} + \left(\frac{\partial U_{3}}{\partial t\textprime}\right)_{i}^{n}\Delta t\textprime 
+				\end{align}
+				\par Primitive variables:
+				\begin{align}
+					\left(\overline{\rho\textprime}\right)_{i}^{n+1} &= \frac{\left(\overline{U}_{1}\right)_{i}^{n+1}}{\left(A\textprime\right)_{i}} \\
+					\left(\overline{T\textprime}\right)_{i}^{n+1} &= \left(\gamma - 1\right)\left[\frac{\left(\overline{U}_3\right)_{i}^{n+1}}{\left(\overline{U}_1\right)_{i}^{n+1}} - \frac{\gamma}{2}\left(\frac{\left(\overline{U}_2\right)_{i}^{n+1}}{\left(\overline{U}_1\right)_{i}^{n+1}}\right)^2\right]
+				\end{align}
+
+		\end{enumerate}
+		\item Corrector Step
+		\begin{enumerate}
+			\item Calculate boundary conditions (BC) for $i = 0$ (subsonic inflow):
+				\par BC for $\rho\textprime$ and $T\textprime$:
+				\begin{align}
+					\rho\textprime	&= 1.0 \\
+					T\textprime	&= 1.0
+				\end{align}
+				\par BC for $U_{1}$:
+				\begin{equation}
+					U_{1} = \rho\textprime A\textprime = A\textprime = \text{fixed}
+				\end{equation}
+				\par BC for $U_{2}$:
+				\begin{equation}
+					U_{2_{i=0}} = 2U_{2_{i=1}} - U_{2_{i=2}}
+				\end{equation}
+				\par BC for $v\textprime$:
+				\begin{equation}
+					v\textprime = \frac{U_{2}}{U_{1}}
+				\end{equation}
+				\par BC for $U_{3}$:
+				\begin{align}
+					U_{3} 	&= \rho\textprime\left(\frac{e\textprime}{\gamma - 1} + \frac{\gamma}{2}v^{2}\textprime\right)A\textprime \\
+						&= U_{1}\left(\frac{T\textprime}{\gamma - 1} + \frac{\gamma}{2}v^{2}\textprime\right)
+				\end{align}
+			\item Compute $\overline{F}_1$, $\overline{F}_2$, and $\overline{F}_3$ from $i = 0 \sim i = n - 2$ and $\overline{J}_2$ from $i = 1 \sim i = n - 2$:
+				\par $\overline{F}_{1}$, $\overline{F}_{2}$, and $\overline{F}_{3}$:
+				\begin{align}
+					\overline{F}_{1}	&= \overline{U}_{2} \\
+					\overline{F}_{2}	&= \frac{\overline{\overline{U}}_{2}^{2}}{\overline{U}_{1}} + \frac{\gamma - 1}{\gamma}\left(\overline{U}_{3} - \frac{\gamma}{2}\frac{\overline{U}_{2}^{2}}{\overline{U}_{1}}\right) \\
+					\overline{F}_{3}	&= \gamma\frac{\overline{U}_{2}\overline{U}_{3}}{\overline{U}_{1}} - \frac{\gamma\left(\gamma - 1\right)}{2}\frac{\overline{U}_{2}^{3}}{\overline{U}_{1}^{2}}
+				\end{align}
+				\par $\overline{J}_{2}$:
+				\begin{align}
+					\overline{J}_{2} 	&= \frac{\gamma - 1}{\gamma}\left(\overline{U}_{3} - \frac{\gamma}{2}\frac{\overline{U}_{2}^{2}}{\overline{U}_{1}}\right)\frac{\partial\left(ln A\textprime\right)}{\partial x\textprime} \\
+						&= \frac{1}{\gamma}\rho\textprime T\textprime\frac{\partial A\textprime}{\partial x\textprime}
+				\end{align}
+			\item Calculate time derivative of $\overline{U}_1$, $\overline{U}_2$, and $\overline{U}_3$ using backward difference from $i = 1 \sim i = n - 2$:
+				\begin{align}
+					\frac{\partial \overline{U}_1}{\partial t\textprime} &= - \frac{\partial \overline{F}_1}{\partial x\textprime}\\
+					\frac{\partial \overline{U}_2}{\partial t\textprime} &= - \frac{\partial \overline{F}_2}{\partial x\textprime} + \overline{J}_2\\
+					\frac{\partial \overline{U}_3}{\partial t\textprime} &= - \frac{\partial \overline{F}_3}{\partial x\textprime}
+				\end{align}
+				\par In finite difference form:
+				\begin{align}
+					\left(\frac{\overline{\partial U}_1}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(\overline{F}_{1}\right)_{i} - \left(\overline{F}_{1}\right)_{i-1}}{\Delta x\textprime}\right) \\
+					\left(\frac{\overline{\partial U}_2}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(\overline{F}_{2}\right)_{i} - \left(\overline{F}_{2}\right)_{i-1}}{\Delta x\textprime}\right) \\
+					\left(\frac{\overline{\partial U}_3}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(\overline{F}_{3}\right)_{i} - \left(\overline{F}_{3}\right)_{i-1}}{\Delta x\textprime}\right) 
+				\end{align}
+			\item Compute the average time derivative:
+				\begin{align}
+					\left(\frac{\partial U_{1}}{\partial t}\right)_{avg} &= \frac{1}{2}\left[\left(\frac{\partial U_{1}}{\partial t\textprime}\right)_{i}^{n} + \left(\frac{\overline{\partial U}_{1}}{\partial t\textprime}\right)_{i}^{n+1} \right] \\
+					\left(\frac{\partial U_{2}}{\partial t}\right)_{avg} &= \frac{1}{2}\left[\left(\frac{\partial U_{2}}{\partial t\textprime}\right)_{i}^{n} + \left(\frac{\overline{\partial U}_{2}}{\partial t\textprime}\right)_{i}^{n+1} \right] \\
+					\left(\frac{\partial U_{3}}{\partial t}\right)_{avg} &= \frac{1}{2}\left[\left(\frac{\partial U_{3}}{\partial t\textprime}\right)_{i}^{n} + \left(\frac{\overline{\partial U}_{3}}{\partial t\textprime}\right)_{i}^{n+1} \right] 
+				\end{align}
+
+		\end{enumerate}
+	\item Calculate new time-step variables:
+		\begin{enumerate}
+			\item Calculate new $U_1$, $U_2$, and $U_3$:
+				\begin{align}
+					\left(U_{1}\right)_{i}^{n+1} &= \left(U_{1}\right)_{i}^{n} + \left(\frac{\partial U_{1}}{\partial t\textprime}\right)_{avg}\Delta t\textprime \\
+					\left(U_{2}\right)_{i}^{n+1} &= \left(U_{2}\right)_{i}^{n} + \left(\frac{\partial U_{2}}{\partial t\textprime}\right)_{avg}\Delta t\textprime \\
+					\left(U_{3}\right)_{i}^{n+1} &= \left(U_{3}\right)_{i}^{n} + \left(\frac{\partial U_{3}}{\partial t\textprime}\right)_{avg}\Delta t\textprime 
+				\end{align}
+			\item Calculate primitive variables:
+				\begin{align}
+					\left(\rho\textprime\right)_{i}^{n+1}	&= \left(U_{1}\right)_{i}^{n+1} \\
+					\left(v\textprime\right)_{i}^{n+1} 	&= \left(\frac{U_2}{U_1}\right)_{i}^{n+1} \\
+					\left(T\textprime\right)_{i}^{n+1}	&= \left(\gamma - 1\right)\left(\frac{U_3}{U_1} - \frac{\gamma}{2}v\textprime^2\right)_{i}^{n+1}
+				\end{align}
+		\end{enumerate}
+	\item Go back to the first step of the loop, with the new variables.
+	\item Finished Looping.
+	\end{enumerate}
+	\item Print output.
+	\item Program exit.
+\end{enumerate}
+
+\end{document}

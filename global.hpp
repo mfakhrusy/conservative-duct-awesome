@@ -1,2 +1,36 @@
+#ifndef GLOBAL_HPP
+#define GLOBAL_HPP
+
 #include <iostream>
 #include <cmath>
+#include <vector>
+
+struct Variables {
+	std::vector<double> x;		//length
+	std::vector<double> A;		//area of duct
+	std::vector<double> rho;	//density
+	std::vector<double> v;		//velocity
+	std::vector<double> T;		//temperature
+	std::vector<double> p;		//pressure
+	std::vector<double> mach;	//mach number
+	std::vector<double> mass_flow;	//mass flow rate
+	
+	//u1 u2 u3
+	std::vector<double> U_1;
+	std::vector<double> U_2;
+	std::vector<double> U_3;
+
+	//f1 f2 f3
+	std::vector<double> F_1;
+	std::vector<double> F_2;
+	std::vector<double> F_3;
+
+	std::vector<double> a;		//speed of sound
+};
+
+struct Parameters {
+	int max_node;
+	const double gamma = 1.4;
+};
+
+#endif
