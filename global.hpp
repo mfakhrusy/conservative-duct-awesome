@@ -7,7 +7,7 @@
 
 struct Variables {
 	std::vector<double> x;		//length
-	std::vector<double> A;		//area of duct
+	std::vector<double> area;	//area of duct
 	std::vector<double> rho;	//density
 	std::vector<double> v;		//velocity
 	std::vector<double> T;		//temperature
@@ -26,11 +26,17 @@ struct Variables {
 	std::vector<double> F_3;
 
 	std::vector<double> a;		//speed of sound
+
+	//delta x and delta t
+	std::vector<double> delta_x;	//use vector in case delta_x is different each node
+	double delta_t;
 };
 
 struct Parameters {
 	int max_node;
-	const double gamma = 1.4;
+	double duct_length;
+	double gamma;
+	double error_max;
 };
 
 #endif
