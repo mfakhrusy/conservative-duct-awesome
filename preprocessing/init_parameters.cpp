@@ -18,7 +18,7 @@ Init_Parameters::Init_Parameters(Parameters &pars, Variables &vars) {
 
 	//calculate things
 	x	=	compute_point_x(max_node, duct_length);
-	area	=	compute_profile(max_node, x);
+	area	=	compute_profile(max_node, x, duct_length);
 	delta_x	=	compute_delta_x(max_node, x);
 
 }
@@ -50,6 +50,9 @@ Parameters Init_Parameters::read_input() {
 			case 4:
 				pars.error_max = value;
 				break;
+			case 5:
+				pars.U_2_constant_value = value;
+				break;
 			default:
 				std::cout << "Something wrong here!\n";
 		}
@@ -73,13 +76,13 @@ std::vector<double> Init_Parameters::compute_point_x(int max_node, double duct_l
 }
 
 //compute duct profile (the function is given on another method)
-std::vector<double> Init_Parameters::compute_profile(int max_node, std::vector<double> x) {
+std::vector<double> Init_Parameters::compute_profile(int max_node, std::vector<double> x, double duct_length) {
 
 	std::vector<double> area(max_node);
 
 	for(auto i = 0; i < max_node; i++) {
 		
-		area[i] = duct_profile_function(x[i]); 
+		area[i] = duct_profile_function(x[i], duct_length); 
 	}
 
 	return area;
@@ -100,7 +103,7 @@ std::vector<double> Init_Parameters::compute_delta_x(int max_node, std::vector<d
 }
 
 //duct profile function
-double Init_Parameters::duct_profile_function(double x) {
+double Init_Parameters::duct_profile_function(double x, double duct_length) {
 	
-	return 1 + 2.2*pow((x - 1.5),2);
+	return 1 + 2.2*pow((x - (0.5*duct_length)),2);
 }

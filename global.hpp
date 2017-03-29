@@ -37,6 +37,7 @@ struct Parameters {
 	double duct_length;
 	double gamma;
 	double error_max;
+	double U_2_constant_value;
 };
 
 #endif
