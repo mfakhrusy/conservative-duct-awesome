@@ -39,18 +39,27 @@ Parameters Init_Parameters::read_input() {
 		switch(count) {
 			
 			case 1:
-				pars.max_node = value;
+				pars.max_node = static_cast<int>(value);
 				break;
 			case 2:
-				pars.duct_length = value;
+				pars.max_iter = static_cast<int>(value);
 				break;
 			case 3:
-				pars.gamma = value;
-				break;
-			case 4:
 				pars.error_max = value;
 				break;
+			case 4:
+				pars.duct_length = value;
+				break;
 			case 5:
+				pars.gamma = value;
+				break;
+			case 6:
+				pars.gas_constant = value;
+				break;
+			case 7:
+				pars.courant_number = value;
+				break;
+			case 8:
 				pars.U_2_constant_value = value;
 				break;
 			default:

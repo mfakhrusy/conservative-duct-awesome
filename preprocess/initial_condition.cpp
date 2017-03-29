@@ -105,12 +105,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_v(Parameters pars,
 	std::vector<double> rho		=	vars.rho;
 	std::vector<double> area	=	vars.area;
 
-	//local boundaries
-	double limit_0	=	duct_length - duct_length;
-	double limit_1	=	duct_length/6;			
-	double limit_2	=	duct_length/2;
-	double limit_3	=	duct_length*0.7;
-
 	//processed vars
 	std::vector<double> v(max_node);
 
@@ -133,12 +127,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_U_1(Parameters par
 	std::vector<double> rho		=	vars.rho;
 	std::vector<double> area	=	vars.area;
 
-	//local boundaries
-	double limit_0	=	duct_length - duct_length;
-	double limit_1	=	duct_length/6;			
-	double limit_2	=	duct_length/2;
-	double limit_3	=	duct_length*0.7;
-
 	//processed vars
 	std::vector<double> U_1(max_node);
 
@@ -160,13 +148,7 @@ std::vector<double> Initial_Condition::calc_initial_condition_U_2(Parameters par
 	std::vector<double> rho		=	vars.rho;
 	std::vector<double> area	=	vars.area;
 	std::vector<double> v		=	vars.v;
-
-	//local boundaries
-	double limit_0	=	duct_length - duct_length;
-	double limit_1	=	duct_length/6;			
-	double limit_2	=	duct_length/2;
-	double limit_3	=	duct_length*0.7;
-
+	
 	//processed vars
 	std::vector<double> U_2(max_node);
 
@@ -190,12 +172,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_U_3(Parameters par
 	std::vector<double> area	=	vars.area;
 	std::vector<double> v		=	vars.v;
 	std::vector<double> T		=	vars.T;
-
-	//local boundaries
-	double limit_0	=	duct_length - duct_length;
-	double limit_1	=	duct_length/6;			
-	double limit_2	=	duct_length/2;
-	double limit_3	=	duct_length*0.7;
 
 	//processed vars
 	std::vector<double> U_3(max_node);
