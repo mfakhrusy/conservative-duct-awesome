@@ -1,7 +1,9 @@
 #ifndef MAIN_CORRECTOR_HPP
 #define MAIN_CORRECTOR_HPP
 
-class Main_Corrector {
+#include "main_predictor.hpp"
+
+class Main_Corrector: public Main_Predictor {
 
 };
 

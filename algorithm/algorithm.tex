@@ -118,9 +118,9 @@
 				\end{align}
 				\par In finite difference form:
 				\begin{align}
-					\left(\frac{U_1}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(F_{1}\right)_{i+1} - \left(F_{1}\right)_{i}}{\Delta x\textprime}\right) \\
-					\left(\frac{U_2}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(F_{2}\right)_{i+1} - \left(F_{2}\right)_{i}}{\Delta x\textprime}\right) \\
-					\left(\frac{U_3}{\partial t\textprime}\right)_{i}^{n+1} &= -\left(\frac{\left(F_{3}\right)_{i+1} - \left(F_{3}\right)_{i}}{\Delta x\textprime}\right)
+					\left(\frac{U_1}{\partial t\textprime}\right)_{i}^{n} &= -\left(\frac{\left(F_{1}\right)_{i+1} - \left(F_{1}\right)_{i}}{\Delta x\textprime}\right) \\
+					\left(\frac{U_2}{\partial t\textprime}\right)_{i}^{n} &= -\left(\frac{\left(F_{2}\right)_{i+1} - \left(F_{2}\right)_{i}}{\Delta x\textprime}\right) + J_2 \\
+					\left(\frac{U_3}{\partial t\textprime}\right)_{i}^{n} &= -\left(\frac{\left(F_{3}\right)_{i+1} - \left(F_{3}\right)_{i}}{\Delta x\textprime}\right)
 				\end{align}
 
 			\item Compute the predicted value from $i = 1 \sim i = n - 2$:
@@ -165,7 +165,7 @@
 				\par $\overline{F}_{1}$, $\overline{F}_{2}$, and $\overline{F}_{3}$:
 				\begin{align}
 					\overline{F}_{1}	&= \overline{U}_{2} \\
-					\overline{F}_{2}	&= \frac{\overline{\overline{U}}_{2}^{2}}{\overline{U}_{1}} + \frac{\gamma - 1}{\gamma}\left(\overline{U}_{3} - \frac{\gamma}{2}\frac{\overline{U}_{2}^{2}}{\overline{U}_{1}}\right) \\
+					\overline{F}_{2}	&= \frac{\overline{U}_{2}^{2}}{\overline{U}_{1}} + \frac{\gamma - 1}{\gamma}\left(\overline{U}_{3} - \frac{\gamma}{2}\frac{\overline{U}_{2}^{2}}{\overline{U}_{1}}\right) \\
 					\overline{F}_{3}	&= \gamma\frac{\overline{U}_{2}\overline{U}_{3}}{\overline{U}_{1}} - \frac{\gamma\left(\gamma - 1\right)}{2}\frac{\overline{U}_{2}^{3}}{\overline{U}_{1}^{2}}
 				\end{align}
 				\par $\overline{J}_{2}$:

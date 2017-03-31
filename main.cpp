@@ -63,12 +63,28 @@ int main() {
 	std::cout << delta_t << std::endl;
 	
 	//---------- second -> main_predictor ----------//
+	
+	//copy vars into vars_predictor
+	vars_predictor	=	vars;
+
 	//bc outflow
-	vars		=	main_predictor.bc_outflow_predictor(pars, vars);
+	vars_predictor		=	main_predictor.bc_outflow_predictor(pars, vars_predictor);
+	
 	//F_1 F_2 F_3
-	vars.F_1	=	main_predictor.calc_F_1_predictor(pars, vars);
-	vars.F_2	=	main_predictor.calc_F_2_predictor(pars, vars);
-	vars.F_3	=	main_predictor.calc_F_3_predictor(pars, vars);
+	vars_predictor.F_1	=	main_predictor.calc_F_1(pars, vars_predictor);
+	vars_predictor.F_2	=	main_predictor.calc_F_2(pars, vars_predictor);
+	vars_predictor.F_3	=	main_predictor.calc_F_3(pars, vars_predictor);
+
+	//time derivative
+	vars_predictor.dU_1_dt	=	main_predictor.calc_dU_1_dt(pars, vars_predictor);
+	vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt(pars, vars_predictor);
+	vars_predictor.dU_3_dt	=	main_predictor.calc_dU_3_dt(pars, vars_predictor);
+
+	//U_1 U_2 U_3
+	vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
+	vars_predictor.U_2	=	main_predictor.calc_new_U_2(pars, vars_predictor);
+	vars_predictor.U_3	=	main_predictor.calc_new_U_3(pars, vars_predictor);
+	
 
 	
 	} while (error_value > error_max);

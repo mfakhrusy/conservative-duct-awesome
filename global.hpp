@@ -20,10 +20,16 @@ struct Variables {
 	std::vector<double> U_2;
 	std::vector<double> U_3;
 
-	//f1 f2 f3
+	//time derivative of u1 u2 u3
+	std::vector<double> dU_1_dt;
+	std::vector<double> dU_2_dt;
+	std::vector<double> dU_3_dt;
+
+	//f1 f2 f3 j2
 	std::vector<double> F_1;
 	std::vector<double> F_2;
 	std::vector<double> F_3;
+	std::vector<double> J_2;
 
 	std::vector<double> sound_speed;		//speed of sound
 
