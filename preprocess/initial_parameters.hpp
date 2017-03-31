@@ -1,8 +1,8 @@
-#ifndef INIT_PARAMETERS_HPP
-#define INIT_PARAMETERS_HPP
+#ifndef INITIAL_PARAMETERS_HPP
+#define INITIAL_PARAMETERS_HPP
 #include <fstream>
 
-class Init_Parameters {
+class Initial_Parameters {
 
 	Parameters read_input();
 
@@ -12,7 +12,7 @@ class Init_Parameters {
 
 	double duct_profile_function(double x, double duct_length);
 	public:
-		Init_Parameters(Parameters &pars, Variables &vars);
+		Initial_Parameters(Parameters &pars, Variables &vars);
 };
 
 #endif

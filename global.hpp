@@ -41,6 +41,7 @@ struct Parameters {
 	double gas_constant;
 	double courant_number;
 	double U_2_constant_value;
+	double pressure_exit;
 };
 
 #endif

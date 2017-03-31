@@ -8,8 +8,10 @@
 DEST			= .
 
 HDRS			= global.hpp				\
-			  preprocess/init_parameters.hpp	\
+			  preprocess/initial_parameters.hpp	\
 			  preprocess/initial_condition.hpp	\
+			  mainprocess/main_initial.hpp		\
+			  mainprocess/main_predictor.hpp	\
 
 LIBS			=	
 
@@ -24,9 +26,11 @@ MAKEFILE		= Makefile
 
 PROGRAM			= Conservative_Duct
 
-SRCS			= main.cpp					\
-			  preprocess/init_parameters.cpp	\
+SRCS			= main.cpp				\
+			  preprocess/initial_parameters.cpp	\
 			  preprocess/initial_condition.cpp	\
+			  mainprocess/main_initial.cpp		\
+			  mainprocess/main_predictor.cpp	\
 
 OBJS			= $(SRCS:.cpp=.o) 	
 
