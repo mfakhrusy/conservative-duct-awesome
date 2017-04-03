@@ -131,8 +131,8 @@ std::vector<double> Main_Predictor::calc_J_2(Parameters pars, Variables vars) {
 	return J_2;
 }
 
-//calculate dU_1_dt
-std::vector<double> Main_Predictor::calc_dU_1_dt(Parameters pars, Variables vars) {
+//calculate dU_1_dt_predictor
+std::vector<double> Main_Predictor::calc_dU_1_dt_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	int max_node	=	pars.max_node;
@@ -142,18 +142,18 @@ std::vector<double> Main_Predictor::calc_dU_1_dt(Parameters pars, Variables vars
 	std::vector<double> F_1		=	vars.F_1;
 
 	//processed variable
-	std::vector<double> dU_1_dt(max_node);
+	std::vector<double> dU_1_dt_predictor(max_node);
 
-	//process dU_1_dt
+	//process dU_1_dt_predictor
 	for (auto i = 1; i < max_node - 1; i++) {
-		dU_1_dt[i]	=	-1*((F_1[i+1] - F_1[i])/delta_x[i+1]);
+		dU_1_dt_predictor[i]	=	-1*((F_1[i+1] - F_1[i])/delta_x[i+1]);
 	}
 
-	return dU_1_dt;
+	return dU_1_dt_predictor;
 }
 
-//calculate dU_2_dt
-std::vector<double> Main_Predictor::calc_dU_2_dt(Parameters pars, Variables vars) {
+//calculate dU_2_dt_predictor
+std::vector<double> Main_Predictor::calc_dU_2_dt_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	int max_node	=	pars.max_node;
@@ -164,18 +164,18 @@ std::vector<double> Main_Predictor::calc_dU_2_dt(Parameters pars, Variables vars
 	std::vector<double> J_2		=	vars.J_2;
 
 	//processed variable
-	std::vector<double> dU_2_dt(max_node);
+	std::vector<double> dU_2_dt_predictor(max_node);
 
-	//process dU_2_dt
+	//process dU_2_dt_predictor
 	for (auto i = 1; i < max_node - 1; i++) {
-		dU_2_dt[i]	=	-1*((F_2[i+1] - F_2[i])/delta_x[i+1]) + J_2[i];
+		dU_2_dt_predictor[i]	=	-1*((F_2[i+1] - F_2[i])/delta_x[i+1]) + J_2[i];
 	}
 
-	return dU_2_dt;
+	return dU_2_dt_predictor;
 }
 
-//calculate dU_3_dt
-std::vector<double> Main_Predictor::calc_dU_3_dt(Parameters pars, Variables vars) {
+//calculate dU_3_dt_predictor
+std::vector<double> Main_Predictor::calc_dU_3_dt_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	int max_node	=	pars.max_node;
@@ -185,14 +185,14 @@ std::vector<double> Main_Predictor::calc_dU_3_dt(Parameters pars, Variables vars
 	std::vector<double> F_3		=	vars.F_3;
 
 	//processed variable
-	std::vector<double> dU_3_dt(max_node);
+	std::vector<double> dU_3_dt_predictor(max_node);
 
-	//process dU_3_dt
+	//process dU_3_dt_predictor
 	for (auto i = 1; i < max_node - 1; i++) {
-		dU_3_dt[i]	=	-1*((F_3[i+1] - F_3[i])/delta_x[i+1]);
+		dU_3_dt_predictor[i]	=	-1*((F_3[i+1] - F_3[i])/delta_x[i+1]);
 	}
 
-	return dU_3_dt;
+	return dU_3_dt_predictor;
 }
 
 //calculate U_1 at n+1

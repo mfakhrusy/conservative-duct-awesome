@@ -12,6 +12,8 @@ HDRS			= global.hpp				\
 			  preprocess/initial_condition.hpp	\
 			  mainprocess/main_initial.hpp		\
 			  mainprocess/main_predictor.hpp	\
+			  mainprocess/main_corrector.hpp	\
+			  mainprocess/main_final.hpp		\
 
 LIBS			=	
 
@@ -31,6 +33,8 @@ SRCS			= main.cpp				\
 			  preprocess/initial_condition.cpp	\
 			  mainprocess/main_initial.cpp		\
 			  mainprocess/main_predictor.cpp	\
+			  mainprocess/main_corrector.cpp	\
+			  mainprocess/main_final.cpp		\
 
 OBJS			= $(SRCS:.cpp=.o) 	
 

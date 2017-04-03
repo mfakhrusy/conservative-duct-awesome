@@ -54,9 +54,7 @@ int main() {
 	double &delta_t				=	vars.delta_t;
 	
 	//declare error variable
-	double error_rho;
-	double error_v;
-	double error_T;
+	double error_value;
 
 	//looping process
 	do {
@@ -96,10 +94,6 @@ int main() {
 	vars_predictor.rho	=	main_predictor.calc_new_rho(pars, vars_predictor);
 	vars_predictor.T	=	main_predictor.calc_new_T(pars, vars_predictor);
 	
-//	for (auto i = 0; i < rho.size(); i++) {
-//		std::cout << i << " " << vars_predictor.F_2[i] << std::endl;
-//	}
-
 	//---------- third -> main_corrector ----------//
 	
 	//copy vars_predictor into vars_corrector
@@ -119,7 +113,7 @@ int main() {
 	vars_corrector.dU_1_dt	=	main_corrector.calc_dU_1_dt_corrector(pars, vars_corrector);
 	vars_corrector.dU_2_dt	=	main_corrector.calc_dU_2_dt_corrector(pars, vars_corrector);
 	vars_corrector.dU_3_dt	=	main_corrector.calc_dU_3_dt_corrector(pars, vars_corrector);
-	
+
 	//---------- fourth -> main_final ----------//
 	
 	//calculate average time derivative in vars object
@@ -131,7 +125,8 @@ int main() {
 	U_1	=	main_final.calc_new_U_1(pars, vars);
 	U_2	=	main_final.calc_new_U_2(pars, vars);
 	U_3	=	main_final.calc_new_U_3(pars, vars);
-
+	
+	
 	//T and rho and v
 	//copy T rho v to new var
 	std::vector<double> old_rho	=	rho;
@@ -145,13 +140,10 @@ int main() {
 
 	//calculate errors
 	//continuity -> rho
-//	std::cout << "rho:\n";
-	error_rho	=	main_final.calc_error(old_rho, rho);
-//	std::cout << "v:\n";
-	error_v		=	main_final.calc_error(old_v, v);
-//	std::cout << "T:\n";
-	error_T		=	main_final.calc_error(old_T, T);
+	double error_rho	=	main_final.calc_error(old_rho, rho);
+	double error_v	=	main_final.calc_error(old_v, v);
+	double error_T	=	main_final.calc_error(old_T, T);
 	
-//	std::cout << error_rho << " " << error_v << " " << error_T << std::endl;
+
 	} while (error_rho > error_max);
 }

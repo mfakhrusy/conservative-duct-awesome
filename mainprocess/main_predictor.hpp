@@ -11,9 +11,9 @@ class Main_Predictor {
 		std::vector<double> calc_F_3(Parameters pars, Variables vars);
 		std::vector<double> calc_J_2(Parameters pars, Variables vars);
 
-		std::vector<double> calc_dU_1_dt(Parameters pars, Variables vars);
-		std::vector<double> calc_dU_2_dt(Parameters pars, Variables vars);
-		std::vector<double> calc_dU_3_dt(Parameters pars, Variables vars);
+		std::vector<double> calc_dU_1_dt_predictor(Parameters pars, Variables vars);
+		std::vector<double> calc_dU_2_dt_predictor(Parameters pars, Variables vars);
+		std::vector<double> calc_dU_3_dt_predictor(Parameters pars, Variables vars);
 
 		std::vector<double> calc_new_U_1(Parameters pars, Variables vars);
 		std::vector<double> calc_new_U_2(Parameters pars, Variables vars);
