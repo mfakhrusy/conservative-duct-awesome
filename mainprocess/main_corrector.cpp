@@ -5,7 +5,7 @@
 Variables Main_Corrector::bc_inflow_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node		=	pars.max_node;
+	const int max_node		=	pars.max_node;
 	double gamma		=	pars.gamma;
 	double pressure_exit	=	pars.pressure_exit;
 
@@ -43,7 +43,7 @@ Variables Main_Corrector::bc_inflow_corrector(Parameters pars, Variables vars) {
 std::vector<double> Main_Corrector::calc_F_1_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	std::vector<double> U_2		=	vars.U_2;
@@ -64,7 +64,7 @@ std::vector<double> Main_Corrector::calc_F_1_corrector(Parameters pars, Variable
 std::vector<double> Main_Corrector::calc_F_2_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	double gamma	=	pars.gamma;
 
 	//local vars
@@ -91,7 +91,7 @@ std::vector<double> Main_Corrector::calc_F_2_corrector(Parameters pars, Variable
 std::vector<double> Main_Corrector::calc_F_3_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	double gamma	=	pars.gamma;
 
 	//local vars
@@ -119,7 +119,7 @@ std::vector<double> Main_Corrector::calc_F_3_corrector(Parameters pars, Variable
 std::vector<double> Main_Corrector::calc_dU_1_dt_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	
 	//local vars
 	std::vector<double> delta_x	=	vars.delta_x;
@@ -140,7 +140,7 @@ std::vector<double> Main_Corrector::calc_dU_1_dt_corrector(Parameters pars, Vari
 std::vector<double> Main_Corrector::calc_dU_2_dt_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	
 	//local vars
 	std::vector<double> delta_x	=	vars.delta_x;
@@ -162,7 +162,7 @@ std::vector<double> Main_Corrector::calc_dU_2_dt_corrector(Parameters pars, Vari
 std::vector<double> Main_Corrector::calc_dU_3_dt_corrector(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	
 	//local vars
 	std::vector<double> delta_x	=	vars.delta_x;

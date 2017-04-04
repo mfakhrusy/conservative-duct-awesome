@@ -24,9 +24,12 @@ void Post_Output::print_result(int max_node, Variables vars) {
 	std::vector<double> rho		=	vars.rho;
 	std::vector<double> v		=	vars.v;
 	std::vector<double> T		=	vars.T;
+	std::vector<double> p		=	vars.p;
+	std::vector<double> mach	=	vars.mach;
+	std::vector<double> mass_flow	=	vars.mass_flow;
 
 	std::ofstream output_file("output/output_table.dat");
-	output_file << "iter x area rho v T" << std::endl;
+	output_file << "n x area density velocity temperature pressure mach mass_flow" << std::endl;
 	for (auto i = 0; i < max_node; i++) {
 		
 		output_file << i << " ";
@@ -35,6 +38,9 @@ void Post_Output::print_result(int max_node, Variables vars) {
 		output_file << rho[i] << " ";
 		output_file << v[i] << " ";
 		output_file << T[i] << " ";
+		output_file << p[i] << " ";
+		output_file << mach[i] << " ";
+		output_file << mass_flow[i] << " ";
 		output_file << std::endl;
 	}
 

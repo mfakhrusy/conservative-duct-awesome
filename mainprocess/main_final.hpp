@@ -8,6 +8,9 @@ class Main_Final : public Main_Predictor {
 	public:
 		std::vector<double> calc_dU_dt_average(Parameters pars, std::vector<double> dU_dt_predictor, std::vector<double> dU_dt_corrector);
 		std::vector<double> calc_new_v(Parameters pars, Variables vars);
+		std::vector<double> calc_mach(Parameters pars, Variables vars);
+		std::vector<double> calc_mass_flow(Parameters pars, Variables vars);
+		std::vector<double> calc_pressure(Parameters pars, Variables vars);
 
 		//error calculations
 		double calc_error(std::vector<double> old_F, std::vector<double> new_F);

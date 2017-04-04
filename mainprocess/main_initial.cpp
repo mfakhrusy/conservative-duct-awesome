@@ -5,7 +5,7 @@
 std::vector<double> Main_Initial::calc_sound_speed(Parameters pars, std::vector<double> T) {
 
 	//declare local pars
-	int max_node		=	pars.max_node;
+	const int max_node		=	pars.max_node;
 	double gas_constant	=	pars.gas_constant;
 	double gamma		=	pars.gamma;
 
@@ -26,7 +26,7 @@ std::vector<double> Main_Initial::calc_sound_speed(Parameters pars, std::vector<
 double Main_Initial::calc_delta_t(Parameters pars, Variables vars) {
 
 	//declare local vars
-	int max_node			=	pars.max_node;
+	const int max_node			=	pars.max_node;
 	double courant_number		=	pars.courant_number;
 	std::vector<double> delta_x	=	vars.delta_x;
 	std::vector<double> sound_speed	=	vars.sound_speed;

@@ -5,7 +5,7 @@
 Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node		=	pars.max_node;
+	const int max_node		=	pars.max_node;
 	double gamma		=	pars.gamma;
 	double pressure_exit	=	pars.pressure_exit;
 
@@ -35,7 +35,7 @@ Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) 
 std::vector<double> Main_Predictor::calc_F_1_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	std::vector<double> U_2		=	vars.U_2;
@@ -56,7 +56,7 @@ std::vector<double> Main_Predictor::calc_F_1_predictor(Parameters pars, Variable
 std::vector<double> Main_Predictor::calc_F_2_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	double gamma	=	pars.gamma;
 
 	//local vars
@@ -83,7 +83,7 @@ std::vector<double> Main_Predictor::calc_F_2_predictor(Parameters pars, Variable
 std::vector<double> Main_Predictor::calc_F_3_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	double gamma	=	pars.gamma;
 
 	//local vars
@@ -110,7 +110,7 @@ std::vector<double> Main_Predictor::calc_F_3_predictor(Parameters pars, Variable
 std::vector<double> Main_Predictor::calc_J_2(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	double gamma	=	pars.gamma;
 
 	//local vars
@@ -135,7 +135,7 @@ std::vector<double> Main_Predictor::calc_J_2(Parameters pars, Variables vars) {
 std::vector<double> Main_Predictor::calc_dU_1_dt_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	
 	//local vars
 	std::vector<double> delta_x	=	vars.delta_x;
@@ -156,7 +156,7 @@ std::vector<double> Main_Predictor::calc_dU_1_dt_predictor(Parameters pars, Vari
 std::vector<double> Main_Predictor::calc_dU_2_dt_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	
 	//local vars
 	std::vector<double> delta_x	=	vars.delta_x;
@@ -179,7 +179,7 @@ std::vector<double> Main_Predictor::calc_dU_2_dt_predictor(Parameters pars, Vari
 std::vector<double> Main_Predictor::calc_dU_3_dt_predictor(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	
 	//local vars
 	std::vector<double> delta_x	=	vars.delta_x;
@@ -200,7 +200,7 @@ std::vector<double> Main_Predictor::calc_dU_3_dt_predictor(Parameters pars, Vari
 std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	double delta_t			=	vars.delta_t;
@@ -223,7 +223,7 @@ std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars
 std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	double delta_t			=	vars.delta_t;
@@ -246,7 +246,7 @@ std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars
 std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	double delta_t			=	vars.delta_t;
@@ -269,7 +269,7 @@ std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars
 std::vector<double> Main_Predictor::calc_new_rho(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	std::vector<double> U_1		=	vars.U_1;
@@ -291,7 +291,7 @@ std::vector<double> Main_Predictor::calc_new_rho(Parameters pars, Variables vars
 std::vector<double> Main_Predictor::calc_new_T(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 	double gamma	=	pars.gamma;
 
 	//local vars

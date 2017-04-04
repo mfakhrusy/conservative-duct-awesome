@@ -5,7 +5,7 @@
 std::vector<double> Main_Final::calc_dU_dt_average(Parameters pars, std::vector<double> dU_dt_predictor, std::vector<double> dU_dt_corrector) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//processed variable
 	std::vector<double> dU_dt_average(max_node);
@@ -22,7 +22,7 @@ std::vector<double> Main_Final::calc_dU_dt_average(Parameters pars, std::vector<
 std::vector<double> Main_Final::calc_new_v(Parameters pars, Variables vars) {
 
 	//local pars
-	int max_node	=	pars.max_node;
+	const int max_node	=	pars.max_node;
 
 	//local vars
 	std::vector<double> U_1	=	vars.U_1;
@@ -43,7 +43,7 @@ std::vector<double> Main_Final::calc_new_v(Parameters pars, Variables vars) {
 double Main_Final::calc_error(std::vector<double> old_F, std::vector<double> new_F) {
 
 	//get the size
-	int max_node	=	old_F.size();
+	const int max_node	=	old_F.size();
 
 	//processed variable
 	double error_var = 0;
@@ -56,8 +56,73 @@ double Main_Final::calc_error(std::vector<double> old_F, std::vector<double> new
 			error_var = error_var;
 		}
 
-//		std::cout << "error: " << old_F[i] << " " << new_F[i] << " " << error_var << std::endl;
 	}
 	
 	return error_var;
 }
+
+//mach calculation
+std::vector<double> Main_Final::calc_mach(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+
+	//local vars
+	std::vector<double> v		=	vars.v;
+	std::vector<double> sound_speed	=	vars.sound_speed;
+
+	//processed variable
+	std::vector<double> mach(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+		
+		mach[i]	=	v[i]/sound_speed[i];
+	}
+
+	return mach;
+}
+
+//mass flow calculation
+std::vector<double> Main_Final::calc_mass_flow(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+
+	//local vars
+	std::vector<double> v		=	vars.v;
+	std::vector<double> rho		=	vars.rho;
+	std::vector<double> area	=	vars.area;
+
+	//processed variable
+	std::vector<double> mass_flow(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		mass_flow[i]	=	v[i]*rho[i]*area[i];
+	}
+
+	return mass_flow;
+}
+
+//pressure calculation
+std::vector<double> Main_Final::calc_pressure(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	double gamma	=	pars.gamma;
+
+	//local vars
+	std::vector<double> T		=	vars.T;
+
+	//processed variable
+	std::vector<double> pressure(max_node);
+
+	double temp	=	gamma/(gamma - 1);
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		pressure[i]	=	pow(T[i], temp);
+	}
+
+	return pressure;
+}
+

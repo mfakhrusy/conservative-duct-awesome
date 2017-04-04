@@ -6,6 +6,7 @@
 #include "mainprocess/main_corrector.hpp"
 #include "mainprocess/main_final.hpp"
 #include "misc/post_output.hpp"
+#include <fstream>
 
 int main() {
 
@@ -64,132 +65,149 @@ int main() {
 
 	int count = 0;
 
+	std::ofstream errors("output/errors.dat");
+	errors << "iteration error_rho error_v error_T" << std::endl;
+
 	//looping process
 	do {
-	count++;
-
-	//---------- first -> main_initial ----------//
-	//calculate sound speed
-	sound_speed	=	main_init.calc_sound_speed(pars, T);
-	//calculate delta_t
-	delta_t		=	main_init.calc_delta_t(pars, vars);
+		count++;
 	
-	//---------- second -> main_predictor ----------//
+		//---------- first -> main_initial ----------//
+		//calculate sound speed
+		sound_speed	=	main_init.calc_sound_speed(pars, T);
+		//calculate delta_t
+		delta_t		=	main_init.calc_delta_t(pars, vars);
+		
+		//---------- second -> main_predictor ----------//
+		
+		//copy vars into vars_predictor
+		Variables vars_predictor;
+		vars_predictor		=	vars;
+		
+		//bc outflow
+		vars_predictor		=	main_predictor.bc_outflow_predictor(pars, vars_predictor);
+		
+		//F_1 F_2 F_3 J_2
+		vars_predictor.F_1	=	main_predictor.calc_F_1_predictor(pars, vars_predictor);
+		vars_predictor.F_2	=	main_predictor.calc_F_2_predictor(pars, vars_predictor);
+		vars_predictor.F_3	=	main_predictor.calc_F_3_predictor(pars, vars_predictor);
+		vars_predictor.J_2	=	main_predictor.calc_J_2(pars, vars_predictor);
+		
+		//time derivative
+		vars_predictor.dU_1_dt	=	main_predictor.calc_dU_1_dt_predictor(pars, vars_predictor);
+		vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt_predictor(pars, vars_predictor);
+		vars_predictor.dU_3_dt	=	main_predictor.calc_dU_3_dt_predictor(pars, vars_predictor);
 	
-	//copy vars into vars_predictor
-	Variables vars_predictor;
-	vars_predictor		=	vars;
-
-	//bc outflow
-	vars_predictor		=	main_predictor.bc_outflow_predictor(pars, vars_predictor);
+		//U_1 U_2 U_3
+		vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
+		vars_predictor.U_2	=	main_predictor.calc_new_U_2(pars, vars_predictor);
+		vars_predictor.U_3	=	main_predictor.calc_new_U_3(pars, vars_predictor);
 	
-	//F_1 F_2 F_3 J_2
-	vars_predictor.F_1	=	main_predictor.calc_F_1_predictor(pars, vars_predictor);
-	vars_predictor.F_2	=	main_predictor.calc_F_2_predictor(pars, vars_predictor);
-	vars_predictor.F_3	=	main_predictor.calc_F_3_predictor(pars, vars_predictor);
-	vars_predictor.J_2	=	main_predictor.calc_J_2(pars, vars_predictor);
+		//T and rho
+		vars_predictor.rho	=	main_predictor.calc_new_rho(pars, vars_predictor);
+		vars_predictor.T	=	main_predictor.calc_new_T(pars, vars_predictor);
 	
-	//time derivative
-	vars_predictor.dU_1_dt	=	main_predictor.calc_dU_1_dt_predictor(pars, vars_predictor);
-	vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt_predictor(pars, vars_predictor);
-	vars_predictor.dU_3_dt	=	main_predictor.calc_dU_3_dt_predictor(pars, vars_predictor);
-
-	//U_1 U_2 U_3
-	vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
-	vars_predictor.U_2	=	main_predictor.calc_new_U_2(pars, vars_predictor);
-	vars_predictor.U_3	=	main_predictor.calc_new_U_3(pars, vars_predictor);
-
-	//T and rho
-	vars_predictor.rho	=	main_predictor.calc_new_rho(pars, vars_predictor);
-	vars_predictor.T	=	main_predictor.calc_new_T(pars, vars_predictor);
-
-	//---------- third -> main_corrector ----------//
+		//---------- third -> main_corrector ----------//
+		
+		//copy vars_predictor into vars_corrector
+		Variables vars_corrector;
+		vars_corrector		=	vars_predictor;
 	
-	//copy vars_predictor into vars_corrector
-	Variables vars_corrector;
-	vars_corrector		=	vars_predictor;
-
-	//bc inflow
-	vars_corrector		=	main_corrector.bc_inflow_corrector(pars, vars_corrector);
-
-	//F_1 F_2 F_3 J_2
-	vars_corrector.F_1	=	main_corrector.calc_F_1_corrector(pars, vars_corrector);
-	vars_corrector.F_2	=	main_corrector.calc_F_2_corrector(pars, vars_corrector);
-	vars_corrector.F_3	=	main_corrector.calc_F_3_corrector(pars, vars_corrector);
-	vars_corrector.J_2	=	main_corrector.calc_J_2(pars, vars_corrector);
-
-	//time derivative
-	vars_corrector.dU_1_dt	=	main_corrector.calc_dU_1_dt_corrector(pars, vars_corrector);
-	vars_corrector.dU_2_dt	=	main_corrector.calc_dU_2_dt_corrector(pars, vars_corrector);
-	vars_corrector.dU_3_dt	=	main_corrector.calc_dU_3_dt_corrector(pars, vars_corrector);
+		//bc inflow
+		vars_corrector		=	main_corrector.bc_inflow_corrector(pars, vars_corrector);
 	
-	//---------- fourth -> main_final ----------//
+		//F_1 F_2 F_3 J_2
+		vars_corrector.F_1	=	main_corrector.calc_F_1_corrector(pars, vars_corrector);
+		vars_corrector.F_2	=	main_corrector.calc_F_2_corrector(pars, vars_corrector);
+		vars_corrector.F_3	=	main_corrector.calc_F_3_corrector(pars, vars_corrector);
+		vars_corrector.J_2	=	main_corrector.calc_J_2(pars, vars_corrector);
 	
-	//calculate average time derivative in vars object
-	dU_1_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_1_dt, vars_corrector.dU_1_dt);
-	dU_2_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_2_dt, vars_corrector.dU_2_dt);
-	dU_3_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_3_dt, vars_corrector.dU_3_dt);
-
-	//calculate new U_1, U_2, and U_3
-	U_1	=	main_final.calc_new_U_1(pars, vars);
-	U_2	=	main_final.calc_new_U_2(pars, vars);
-	U_3	=	main_final.calc_new_U_3(pars, vars);
-
-	//T and rho and v
-	//copy T rho v to new var
-	std::vector<double> old_rho	=	rho;
-	std::vector<double> old_v	=	v;
-	std::vector<double> old_T	=	T;
+		//time derivative
+		vars_corrector.dU_1_dt	=	main_corrector.calc_dU_1_dt_corrector(pars, vars_corrector);
+		vars_corrector.dU_2_dt	=	main_corrector.calc_dU_2_dt_corrector(pars, vars_corrector);
+		vars_corrector.dU_3_dt	=	main_corrector.calc_dU_3_dt_corrector(pars, vars_corrector);
+		
+		//---------- fourth -> main_final ----------//
+		
+		//calculate average time derivative in vars object
+		dU_1_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_1_dt, vars_corrector.dU_1_dt);
+		dU_2_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_2_dt, vars_corrector.dU_2_dt);
+		dU_3_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_3_dt, vars_corrector.dU_3_dt);
 	
-	//calculations
-	rho	=	main_final.calc_new_rho(pars, vars);
-	v	=	main_final.calc_new_v(pars, vars);
-	T	=	main_final.calc_new_T(pars, vars);
+		//calculate new U_1, U_2, and U_3
+		U_1	=	main_final.calc_new_U_1(pars, vars);
+		U_2	=	main_final.calc_new_U_2(pars, vars);
+		U_3	=	main_final.calc_new_U_3(pars, vars);
 	
-	//CHECK PREDICTED VALUE
+		//T and rho and v
+		//copy T rho v to new var
+		std::vector<double> old_rho	=	rho;
+		std::vector<double> old_v	=	v;
+		std::vector<double> old_T	=	T;
+		
+		//calculations
+		rho		=	main_final.calc_new_rho(pars, vars);
+		v		=	main_final.calc_new_v(pars, vars);
+		T		=	main_final.calc_new_T(pars, vars);
+		p		=	main_final.calc_pressure(pars, vars);
+		mach		=	main_final.calc_mach(pars, vars);
+		mass_flow	=	main_final.calc_mass_flow(pars, vars);
+		
+		//CHECK PREDICTED VALUE
+		//TO MAKE THESE FILES TO APPEAR, ONE NEED TO MAKE new directory "output_dump/"
+		
+		post_output.print_vector(vars_predictor.F_1, "F_1_predictor");
+		post_output.print_vector(vars_predictor.F_2, "F_2_predictor");
+		post_output.print_vector(vars_predictor.F_3, "F_3_predictor");
+		post_output.print_vector(vars_predictor.J_2, "J_2_predictor");
 	
-	post_output.print_vector(vars_predictor.F_1, "F_1_predictor");
-	post_output.print_vector(vars_predictor.F_2, "F_2_predictor");
-	post_output.print_vector(vars_predictor.F_3, "F_3_predictor");
-	post_output.print_vector(vars_predictor.J_2, "J_2_predictor");
-
-	post_output.print_vector(vars_predictor.dU_1_dt, "dU_1_dt_predictor");
-	post_output.print_vector(vars_predictor.dU_2_dt, "dU_2_dt_predictor");
-	post_output.print_vector(vars_predictor.dU_3_dt, "dU_3_dt_predictor");
-
-	post_output.print_vector(vars_predictor.U_1, "U_1_predictor");
-	post_output.print_vector(vars_predictor.U_2, "U_2_predictor");
-	post_output.print_vector(vars_predictor.U_3, "U_3_predictor");
-
-	post_output.print_vector(vars_predictor.rho, "rho_predictor");
-	post_output.print_vector(vars_predictor.v, "v_predictor");
-
-	//CHECK CORRECTOR VALUE
-
-	post_output.print_vector(vars_corrector.F_1, "F_1_corrector");
-	post_output.print_vector(vars_corrector.F_2, "F_2_corrector");
-	post_output.print_vector(vars_corrector.F_3, "F_3_corrector");
-	post_output.print_vector(vars_corrector.J_2, "J_2_corrector");
-
-	post_output.print_vector(vars_corrector.dU_1_dt, "dU_1_dt_corrector");
-	post_output.print_vector(vars_corrector.dU_2_dt, "dU_2_dt_corrector");
-	post_output.print_vector(vars_corrector.dU_3_dt, "dU_3_dt_corrector");
-
-	//CHECK NEW VALUE
+		post_output.print_vector(vars_predictor.dU_1_dt, "dU_1_dt_predictor");
+		post_output.print_vector(vars_predictor.dU_2_dt, "dU_2_dt_predictor");
+		post_output.print_vector(vars_predictor.dU_3_dt, "dU_3_dt_predictor");
 	
-	post_output.print_vector(rho, "rho");
-	post_output.print_vector(v, "v");
-	post_output.print_vector(T, "T");
-
-	//PRINT RESULT
-	post_output.print_result(max_node, vars);
-
-	//calculate errors
-	//continuity -> rho
-	error_rho	=	main_final.calc_error(old_rho, rho);
-	error_v		=	main_final.calc_error(old_v, v);
-	error_T		=	main_final.calc_error(old_T, T);
+		post_output.print_vector(vars_predictor.U_1, "U_1_predictor");
+		post_output.print_vector(vars_predictor.U_2, "U_2_predictor");
+		post_output.print_vector(vars_predictor.U_3, "U_3_predictor");
 	
-	std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+		post_output.print_vector(vars_predictor.rho, "rho_predictor");
+		post_output.print_vector(vars_predictor.v, "v_predictor");
+	
+		//CHECK CORRECTOR VALUE
+	
+		post_output.print_vector(vars_corrector.F_1, "F_1_corrector");
+		post_output.print_vector(vars_corrector.F_2, "F_2_corrector");
+		post_output.print_vector(vars_corrector.F_3, "F_3_corrector");
+		post_output.print_vector(vars_corrector.J_2, "J_2_corrector");
+	
+		post_output.print_vector(vars_corrector.dU_1_dt, "dU_1_dt_corrector");
+		post_output.print_vector(vars_corrector.dU_2_dt, "dU_2_dt_corrector");
+		post_output.print_vector(vars_corrector.dU_3_dt, "dU_3_dt_corrector");
+	
+		//CHECK NEW VALUE
+		
+		post_output.print_vector(rho, "rho");
+		post_output.print_vector(v, "v");
+		post_output.print_vector(T, "T");
+
+		//PRINT RESULT
+		post_output.print_result(max_node, vars);
+	
+		//calculate errors
+		//continuity -> rho
+		error_rho	=	main_final.calc_error(old_rho, rho);
+		error_v		=	main_final.calc_error(old_v, v);
+		error_T		=	main_final.calc_error(old_T, T);
+	
+		//print errors on external file
+	
+		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+		
+//		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+		if (count > 50000) {
+			std::cout << "Computation too long, program exit" << std::endl;
+			break;	
+		}
 	} while (error_rho > error_max || error_v > error_max || error_T > error_max);
+
+	errors.close();
 }
