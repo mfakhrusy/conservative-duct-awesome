@@ -1,6 +1,6 @@
 31	max_node
 1000	max_iter
-0.01	error_max
+0.001	error_max
 3	duct_length
 1.4	gamma_value
 286.9	gas_constant_SI_air

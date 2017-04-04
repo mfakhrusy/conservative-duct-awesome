@@ -108,7 +108,8 @@ std::vector<double> Initial_Parameters::compute_delta_x(int max_node, std::vecto
 
 	for (auto i = 0; i < delta_x.size(); i++) {
 		
-		delta_x[i] = x[i + 1] - x[i];
+		delta_x[i] = std::abs(x[i + 1] - x[i]);
+//		std::cout << i << " " << delta_x[i] << " " << x[i+1] << " " << x[i] << std::endl;
 	}
 
 	return delta_x;

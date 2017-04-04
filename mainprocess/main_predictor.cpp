@@ -32,7 +32,7 @@ Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) 
 }
 
 //calculate F_1
-std::vector<double> Main_Predictor::calc_F_1(Parameters pars, Variables vars) {
+std::vector<double> Main_Predictor::calc_F_1_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	int max_node	=	pars.max_node;
@@ -53,7 +53,7 @@ std::vector<double> Main_Predictor::calc_F_1(Parameters pars, Variables vars) {
 }
 
 //calculate F_2
-std::vector<double> Main_Predictor::calc_F_2(Parameters pars, Variables vars) {
+std::vector<double> Main_Predictor::calc_F_2_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	int max_node	=	pars.max_node;
@@ -80,7 +80,7 @@ std::vector<double> Main_Predictor::calc_F_2(Parameters pars, Variables vars) {
 }
 
 //calculate F_3
-std::vector<double> Main_Predictor::calc_F_3(Parameters pars, Variables vars) {
+std::vector<double> Main_Predictor::calc_F_3_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	int max_node	=	pars.max_node;
@@ -146,7 +146,7 @@ std::vector<double> Main_Predictor::calc_dU_1_dt_predictor(Parameters pars, Vari
 
 	//process dU_1_dt_predictor
 	for (auto i = 1; i < max_node - 1; i++) {
-		dU_1_dt_predictor[i]	=	-1*((F_1[i+1] - F_1[i])/delta_x[i+1]);
+		dU_1_dt_predictor[i]	=	-1*((F_1[i+1] - F_1[i])/delta_x[i]);
 	}
 
 	return dU_1_dt_predictor;
@@ -168,7 +168,8 @@ std::vector<double> Main_Predictor::calc_dU_2_dt_predictor(Parameters pars, Vari
 
 	//process dU_2_dt_predictor
 	for (auto i = 1; i < max_node - 1; i++) {
-		dU_2_dt_predictor[i]	=	-1*((F_2[i+1] - F_2[i])/delta_x[i+1]) + J_2[i];
+		dU_2_dt_predictor[i]	=	-1*((F_2[i+1] - F_2[i])/delta_x[i]) + J_2[i];
+//		std::cout << i << " " << delta_x[i+1] << std::endl;
 	}
 
 	return dU_2_dt_predictor;
@@ -189,7 +190,7 @@ std::vector<double> Main_Predictor::calc_dU_3_dt_predictor(Parameters pars, Vari
 
 	//process dU_3_dt_predictor
 	for (auto i = 1; i < max_node - 1; i++) {
-		dU_3_dt_predictor[i]	=	-1*((F_3[i+1] - F_3[i])/delta_x[i+1]);
+		dU_3_dt_predictor[i]	=	-1*((F_3[i+1] - F_3[i])/delta_x[i]);
 	}
 
 	return dU_3_dt_predictor;

@@ -1,23 +1,6 @@
 #include "../global.hpp"
 #include "main_initial.hpp"
 
-//constructor
-//Main_Initial::Main_Initial(Parameters pars, Variables &vars) {
-//
-//	//declare local vars
-//	std::vector<double> &sound_speed	=	vars.sound_speed;
-//	std::vector<double> T			=	vars.T;
-//	double &delta_t				=	vars.delta_t;
-//
-//	//calculate sound speed
-//	sound_speed	=	calc_sound_speed(pars, T);
-//
-//	//calculate delta t
-//	delta_t		=	calc_delta_t(pars, vars);
-//	std::cout << delta_t << std::endl;
-//	
-//}
-
 //calculation of sound speed
 std::vector<double> Main_Initial::calc_sound_speed(Parameters pars, std::vector<double> T) {
 

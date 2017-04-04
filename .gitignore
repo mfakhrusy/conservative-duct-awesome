@@ -3,4 +3,5 @@
 *.aux
 *.log
 dump/
+output_dump/
 result.dat

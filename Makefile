@@ -14,6 +14,7 @@ HDRS			= global.hpp				\
 			  mainprocess/main_predictor.hpp	\
 			  mainprocess/main_corrector.hpp	\
 			  mainprocess/main_final.hpp		\
+			  misc/post_output.hpp			\
 
 LIBS			=	
 
@@ -35,6 +36,7 @@ SRCS			= main.cpp				\
 			  mainprocess/main_predictor.cpp	\
 			  mainprocess/main_corrector.cpp	\
 			  mainprocess/main_final.cpp		\
+			  misc/post_output.cpp			\
 
 OBJS			= $(SRCS:.cpp=.o) 	
 
