@@ -207,6 +207,7 @@ int main() {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	
 		}
+
 	} while (error_rho > error_max || error_v > error_max || error_T > error_max);
 
 	errors.close();

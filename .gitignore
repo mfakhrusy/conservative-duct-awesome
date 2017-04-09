@@ -2,6 +2,7 @@
 *.swp
 *.aux
 *.log
+.~lock*
 dump/
 output_dump/
 result.dat
