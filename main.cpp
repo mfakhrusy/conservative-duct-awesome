@@ -117,15 +117,13 @@ int main() {
 
 		//U_1 U_2 U_3
 		vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
-		//for (auto i = 0; i < vars_predictor.S_1.size(); i++) {
-		//	std::cout << i << " " << vars_predictor.S_1[i] << std::endl;
-		//}
 		vars_predictor.U_2	=	main_predictor.calc_new_U_2(pars, vars_predictor);
 		vars_predictor.U_3	=	main_predictor.calc_new_U_3(pars, vars_predictor);
 	
 		//T and rho
 		vars_predictor.rho	=	main_predictor.calc_new_rho(pars, vars_predictor);
 		vars_predictor.T	=	main_predictor.calc_new_T(pars, vars_predictor);
+
 
 		//---------- third -> main_corrector ----------//
 		
@@ -151,6 +149,16 @@ int main() {
 		//---------- fourth -> main_final ----------//
 		
 		std::cout << "(Computing) Final Step . . ." << std::endl;
+
+		//preserve old pressure
+		old_p		=	p;
+
+		//T and rho and v
+		//copy T rho v to new var
+		std::vector<double> old_rho	=	rho;
+		std::vector<double> old_v	=	v;
+		std::vector<double> old_T	=	T;
+
 		//calculate average time derivative in vars object
 		dU_1_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_1_dt, vars_corrector.dU_1_dt);
 		dU_2_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_2_dt, vars_corrector.dU_2_dt);
@@ -166,15 +174,10 @@ int main() {
 		U_2	=	main_final.calc_new_U_2(pars, vars);
 		U_3	=	main_final.calc_new_U_3(pars, vars);
 	
-		//T and rho and v
-		//copy T rho v to new var
-		std::vector<double> old_rho	=	rho;
-		std::vector<double> old_v	=	v;
-		std::vector<double> old_T	=	T;
+//		for (auto i = 0; i < U_1.size(); i++) {
+//			std::cout << i << " " << S_1[i] << std::endl;
+//		}
 		
-		//preserve old pressure
-		old_p		=	p;
-
 		//calculations
 		rho		=	main_final.calc_new_rho(pars, vars);
 		v		=	main_final.calc_new_v(pars, vars);
@@ -238,8 +241,8 @@ int main() {
 			break;	
 		}
 
-		std::cout << "Computation Finished! " << std::endl;
 	} while (error_rho > error_max || error_v > error_max || error_T > error_max);
 
+	std::cout << "Computation Finished! " << std::endl;
 	errors.close();
 }

@@ -330,7 +330,7 @@ std::vector<double> Main_Predictor::calc_S_1(Parameters pars, Variables vars) {
 	//processed variable
 	std::vector<double> S_1(max_node);
 
-	for (auto i = 1; i < max_node; i++) {
+	for (auto i = 1; i < max_node-1; i++) {
 		
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
 		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
@@ -356,7 +356,7 @@ std::vector<double> Main_Predictor::calc_S_2(Parameters pars, Variables vars) {
 	//processed variable
 	std::vector<double> S_2(max_node);
 
-	for (auto i = 1; i < max_node; i++) {
+	for (auto i = 1; i < max_node-1; i++) {
 		
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
 		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
@@ -382,7 +382,7 @@ std::vector<double> Main_Predictor::calc_S_3(Parameters pars, Variables vars) {
 	//processed variable
 	std::vector<double> S_3(max_node);
 
-	for (auto i = 1; i < max_node; i++) {
+	for (auto i = 1; i < max_node-1; i++) {
 		
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
 		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
