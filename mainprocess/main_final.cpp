@@ -82,6 +82,29 @@ std::vector<double> Main_Final::calc_mach(Parameters pars, Variables vars) {
 	return mach;
 }
 
+//pressure calculation
+std::vector<double> Main_Final::calc_pressure(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double gamma	=	pars.gamma;
+
+	//local vars
+	std::vector<double> T		=	vars.T;
+
+	//processed variable
+	std::vector<double> pressure(max_node);
+
+	double temp	=	gamma/(gamma - 1);
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		pressure[i]	=	pow(T[i], temp);
+	}
+
+	return pressure;
+}
+
+
 //mass flow calculation
 std::vector<double> Main_Final::calc_mass_flow(Parameters pars, Variables vars) {
 
@@ -104,25 +127,81 @@ std::vector<double> Main_Final::calc_mass_flow(Parameters pars, Variables vars) 
 	return mass_flow;
 }
 
-//pressure calculation
-std::vector<double> Main_Final::calc_pressure(Parameters pars, Variables vars) {
+//smoothing function
+std::vector<double> Main_Final::calc_S_1_final(Parameters pars, Variables vars, std::vector<double> old_p) {
 
 	//local pars
-	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const int max_node		=	pars.max_node;
+	const double smoothing_constant	=	pars.smoothing_constant;
 
 	//local vars
-	std::vector<double> T		=	vars.T;
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_1	=	vars.U_1;
 
 	//processed variable
-	std::vector<double> pressure(max_node);
+	std::vector<double> S_1(max_node);
 
-	double temp	=	gamma/(gamma - 1);
-	for (auto i = 1; i < max_node - 1; i++) {
-	
-		pressure[i]	=	pow(T[i], temp);
+	for (auto i = 1; i < max_node; i++) {
+		
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
+		double temp_2	=	old_p[i+1] + 2*old_p[i] + old_p[i-1];
+		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i-1];	
+		
+		S_1[i]		=	(temp_1/temp_2)*temp_3;
 	}
 
-	return pressure;
+	return S_1;
+}
+
+//smoothing function
+std::vector<double> Main_Final::calc_S_2_final(Parameters pars, Variables vars, std::vector<double> old_p) {
+
+	//local pars
+	const int max_node		=	pars.max_node;
+	const double smoothing_constant	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_2	=	vars.U_2;
+
+	//processed variable
+	std::vector<double> S_2(max_node);
+
+	for (auto i = 1; i < max_node; i++) {
+		
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
+		double temp_2	=	old_p[i+1] + 2*old_p[i] + old_p[i-1];
+		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i-1];	
+		
+		S_2[i]		=	(temp_1/temp_2)*temp_3;
+	}
+
+	return S_2;
+}
+
+//smoothing function
+std::vector<double> Main_Final::calc_S_3_final(Parameters pars, Variables vars, std::vector<double> old_p) {
+
+	//local pars
+	const int max_node		=	pars.max_node;
+	const double smoothing_constant	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_3	=	vars.U_3;
+
+	//processed variable
+	std::vector<double> S_3(max_node);
+
+	for (auto i = 1; i < max_node; i++) {
+		
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
+		double temp_2	=	old_p[i+1] + 2*old_p[i] + old_p[i-1];
+		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i-1];	
+		
+		S_3[i]		=	(temp_1/temp_2)*temp_3;
+	}
+
+	return S_3;
 }
 

@@ -12,6 +12,10 @@ class Main_Final : public Main_Predictor {
 		std::vector<double> calc_mass_flow(Parameters pars, Variables vars);
 		std::vector<double> calc_pressure(Parameters pars, Variables vars);
 
+		//smoothing final calculation
+		std::vector<double> calc_S_1_final(Parameters pars, Variables vars, std::vector<double> old_p);
+		std::vector<double> calc_S_2_final(Parameters pars, Variables vars, std::vector<double> old_p);
+		std::vector<double> calc_S_3_final(Parameters pars, Variables vars, std::vector<double> old_p);
 		//error calculations
 		double calc_error(std::vector<double> old_F, std::vector<double> new_F);
 };

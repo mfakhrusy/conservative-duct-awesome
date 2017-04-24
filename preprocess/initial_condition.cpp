@@ -8,6 +8,7 @@ Initial_Condition::Initial_Condition(Parameters pars, Variables &vars) {
 	std::vector<double> &rho	=	vars.rho;
 	std::vector<double> &T		=	vars.T;
 	std::vector<double> &v		=	vars.v;
+	std::vector<double> &p		=	vars.p;
 	std::vector<double> &U_1	=	vars.U_1;
 	std::vector<double> &U_2	=	vars.U_2;
 	std::vector<double> &U_3	=	vars.U_3;
@@ -16,6 +17,7 @@ Initial_Condition::Initial_Condition(Parameters pars, Variables &vars) {
 	rho	=	calc_initial_condition_rho(pars, vars);
 	T	=	calc_initial_condition_T(pars, vars);
 	v	=	calc_initial_condition_v(pars, vars);
+	p	=	calc_initial_condition_p(pars, vars);
 	U_1	=	calc_initial_condition_U_1(pars, vars);
 	U_2	=	calc_initial_condition_U_2(pars, vars);
 	U_3	=	calc_initial_condition_U_3(pars, vars);
@@ -98,9 +100,9 @@ std::vector<double> Initial_Condition::calc_initial_condition_T(Parameters pars,
 std::vector<double> Initial_Condition::calc_initial_condition_v(Parameters pars, Variables vars) {
 	
 	//local vars and pars
-	int max_node			=	pars.max_node;
-	double duct_length		=	pars.duct_length;
-	double U_2_constant_value	=	pars.U_2_constant_value;
+	const int max_node			=	pars.max_node;
+	const double duct_length		=	pars.duct_length;
+	const double U_2_constant_value	=	pars.U_2_constant_value;
 
 	std::vector<double> rho		=	vars.rho;
 	std::vector<double> area	=	vars.area;
@@ -117,6 +119,27 @@ std::vector<double> Initial_Condition::calc_initial_condition_v(Parameters pars,
 	return v;
 }
 
+//initial condition for pressure
+std::vector<double> Initial_Condition::calc_initial_condition_p(Parameters pars, Variables vars) {
+
+	//local vars and pars
+	const int max_node	=	pars.max_node;
+	const double gamma	=	pars.gamma;
+
+	std::vector<double> T	=	vars.T;
+
+	//processed variable
+	std::vector<double> pressure(max_node);
+
+	const double temp	=	gamma/(gamma - 1);
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		pressure[i]	=	pow(T[i], temp);
+	}
+
+	return pressure;
+
+}
 //initial condition for U_1
 std::vector<double> Initial_Condition::calc_initial_condition_U_1(Parameters pars, Variables vars) {
 	

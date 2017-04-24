@@ -31,6 +31,11 @@ struct Variables {
 	std::vector<double> F_3;
 	std::vector<double> J_2;
 
+	//s1 s2 s3
+	std::vector<double> S_1;
+	std::vector<double> S_2;
+	std::vector<double> S_3;
+
 	std::vector<double> sound_speed;		//speed of sound
 
 	//delta x and delta t
@@ -48,6 +53,7 @@ struct Parameters {
 	double courant_number;
 	double U_2_constant_value;
 	double pressure_exit;
+	double smoothing_constant;
 };
 
 #endif

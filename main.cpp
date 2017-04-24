@@ -52,12 +52,19 @@ int main() {
 	std::vector<double> &F_1		=	vars.F_1;
 	std::vector<double> &F_2		=	vars.F_2;
 	std::vector<double> &F_3		=	vars.F_3;
+	//s1 s2 s3
+	std::vector<double> &S_1		=	vars.S_1;
+	std::vector<double> &S_2		=	vars.S_2;
+	std::vector<double> &S_3		=	vars.S_3;
 	//sound speed
 	std::vector<double> &sound_speed	=	vars.sound_speed;		//speed of sound
 	//delta x and delta t
 	std::vector<double> &delta_x		=	vars.delta_x;		//use vector in case delta_x is different each node
 	double &delta_t				=	vars.delta_t;
 	
+	//preserve old pressure
+	std::vector<double> old_p(max_node);
+		
 	//declare error variable
 	double error_rho;
 	double error_v;
@@ -68,9 +75,13 @@ int main() {
 	std::ofstream errors("output/errors.dat");
 	errors << "iteration error_rho error_v error_T" << std::endl;
 
+	//resize some variables
+	p.resize(max_node);
+
 	//looping process
 	do {
 		count++;
+		std::cout << "Iteration-" << count << std::endl;
 	
 		//---------- first -> main_initial ----------//
 		//calculate sound speed
@@ -80,6 +91,7 @@ int main() {
 		
 		//---------- second -> main_predictor ----------//
 		
+		std::cout << "(Computing) Predictor Step . . ." << std::endl;
 		//copy vars into vars_predictor
 		Variables vars_predictor;
 		vars_predictor		=	vars;
@@ -98,17 +110,26 @@ int main() {
 		vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt_predictor(pars, vars_predictor);
 		vars_predictor.dU_3_dt	=	main_predictor.calc_dU_3_dt_predictor(pars, vars_predictor);
 	
+		//smoothing constant
+		vars_predictor.S_1	=	main_predictor.calc_S_1(pars, vars_predictor);
+		vars_predictor.S_2	=	main_predictor.calc_S_2(pars, vars_predictor);
+		vars_predictor.S_3	=	main_predictor.calc_S_3(pars, vars_predictor);
+
 		//U_1 U_2 U_3
 		vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
+		//for (auto i = 0; i < vars_predictor.S_1.size(); i++) {
+		//	std::cout << i << " " << vars_predictor.S_1[i] << std::endl;
+		//}
 		vars_predictor.U_2	=	main_predictor.calc_new_U_2(pars, vars_predictor);
 		vars_predictor.U_3	=	main_predictor.calc_new_U_3(pars, vars_predictor);
 	
 		//T and rho
 		vars_predictor.rho	=	main_predictor.calc_new_rho(pars, vars_predictor);
 		vars_predictor.T	=	main_predictor.calc_new_T(pars, vars_predictor);
-	
+
 		//---------- third -> main_corrector ----------//
 		
+		std::cout << "(Computing) Corrector Step . . ." << std::endl;
 		//copy vars_predictor into vars_corrector
 		Variables vars_corrector;
 		vars_corrector		=	vars_predictor;
@@ -129,11 +150,17 @@ int main() {
 		
 		//---------- fourth -> main_final ----------//
 		
+		std::cout << "(Computing) Final Step . . ." << std::endl;
 		//calculate average time derivative in vars object
 		dU_1_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_1_dt, vars_corrector.dU_1_dt);
 		dU_2_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_2_dt, vars_corrector.dU_2_dt);
 		dU_3_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_3_dt, vars_corrector.dU_3_dt);
 	
+		//calculate smoothing for final step
+		S_1	=	main_final.calc_S_1_final(pars, vars, old_p);
+		S_2	=	main_final.calc_S_2_final(pars, vars, old_p);
+		S_3	=	main_final.calc_S_3_final(pars, vars, old_p);
+
 		//calculate new U_1, U_2, and U_3
 		U_1	=	main_final.calc_new_U_1(pars, vars);
 		U_2	=	main_final.calc_new_U_2(pars, vars);
@@ -145,6 +172,9 @@ int main() {
 		std::vector<double> old_v	=	v;
 		std::vector<double> old_T	=	T;
 		
+		//preserve old pressure
+		old_p		=	p;
+
 		//calculations
 		rho		=	main_final.calc_new_rho(pars, vars);
 		v		=	main_final.calc_new_v(pars, vars);
@@ -201,13 +231,14 @@ int main() {
 		//print errors on external file
 	
 		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
-		
-//		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+
+		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 		if (count > 50000) {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	
 		}
 
+		std::cout << "Computation Finished! " << std::endl;
 	} while (error_rho > error_max || error_v > error_max || error_T > error_max);
 
 	errors.close();

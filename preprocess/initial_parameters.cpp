@@ -65,6 +65,9 @@ Parameters Initial_Parameters::read_input() {
 			case 9:
 				pars.pressure_exit = value;
 				break;
+			case 10:
+				pars.smoothing_constant	= value;
+				break;
 			default:
 				std::cout << "Something wrong here!\n";
 		}
