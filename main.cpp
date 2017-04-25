@@ -63,7 +63,7 @@ int main() {
 	double &delta_t				=	vars.delta_t;
 	
 	//preserve old pressure
-	std::vector<double> old_p(max_node);
+	std::vector<double> old_p		=	p;
 		
 	//declare error variable
 	double error_rho;
@@ -150,9 +150,6 @@ int main() {
 		
 		std::cout << "(Computing) Final Step . . ." << std::endl;
 
-		//preserve old pressure
-		old_p		=	p;
-
 		//T and rho and v
 		//copy T rho v to new var
 		std::vector<double> old_rho	=	rho;
@@ -174,10 +171,13 @@ int main() {
 		U_2	=	main_final.calc_new_U_2(pars, vars);
 		U_3	=	main_final.calc_new_U_3(pars, vars);
 	
-//		for (auto i = 0; i < U_1.size(); i++) {
-//			std::cout << i << " " << S_1[i] << std::endl;
-//		}
+	//	for (auto i = 0; i < U_1.size(); i++) {
+	//		std::cout << i << " " << S_1[i] << std::endl;
+	//	}
 		
+		//preserve old pressure
+		old_p		=	p;
+
 		//calculations
 		rho		=	main_final.calc_new_rho(pars, vars);
 		v		=	main_final.calc_new_v(pars, vars);
@@ -204,7 +204,12 @@ int main() {
 	
 		post_output.print_vector(vars_predictor.rho, "rho_predictor");
 		post_output.print_vector(vars_predictor.v, "v_predictor");
-	
+		
+		//CHECK SMOOTHED PREDICTED VALUE
+		post_output.print_vector(vars_predictor.S_1, "S_1_predictor");
+		post_output.print_vector(vars_predictor.S_2, "S_2_predictor");
+		post_output.print_vector(vars_predictor.S_3, "S_3_predictor");
+
 		//CHECK CORRECTOR VALUE
 	
 		post_output.print_vector(vars_corrector.F_1, "F_1_corrector");
@@ -222,6 +227,11 @@ int main() {
 		post_output.print_vector(v, "v");
 		post_output.print_vector(T, "T");
 
+		//CHECK SMOOTHING VALUE
+		post_output.print_vector(S_1, "S_1");
+		post_output.print_vector(S_2, "S_2");
+		post_output.print_vector(S_3, "S_3");
+
 		//PRINT RESULT
 		post_output.print_result(max_node, vars);
 	
@@ -236,7 +246,8 @@ int main() {
 		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 
 		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
-		if (count > 50000) {
+//		if (count >= 1) {
+		if (count >= 50000) {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	
 		}
