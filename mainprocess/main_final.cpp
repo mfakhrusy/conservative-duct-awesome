@@ -32,8 +32,8 @@ std::vector<double> Main_Final::calc_new_v(Parameters pars, Variables vars) {
 	//processed variable
 	std::vector<double> v(max_node);
 
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		
 		v[i]	=	U_2[i]/U_1[i];
 	}
@@ -76,8 +76,8 @@ std::vector<double> Main_Final::calc_mach(Parameters pars, Variables vars) {
 	//processed variable
 	std::vector<double> mach(max_node);
 
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		
 		mach[i]	=	v[i]/sound_speed[i];
 	}
@@ -99,10 +99,13 @@ std::vector<double> Main_Final::calc_pressure(Parameters pars, Variables vars) {
 	std::vector<double> pressure(max_node);
 
 	double temp	=	gamma/(gamma - 1);
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 	
 		pressure[i]	=	pow(T[i], temp);
+//		if(std::isnan(pressure[i])) {
+//			std::cout << i << " " << pressure[i] << " " << temp << " " << T[i] << " " << pow(T[i],1.1) << std::endl;
+//		}
 	}
 
 	return pressure;
@@ -123,8 +126,8 @@ std::vector<double> Main_Final::calc_mass_flow(Parameters pars, Variables vars) 
 	//processed variable
 	std::vector<double> mass_flow(max_node);
 
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 	
 		mass_flow[i]	=	v[i]*rho[i]*area[i];
 	}
@@ -146,14 +149,15 @@ std::vector<double> Main_Final::calc_S_1_final(Parameters pars, Variables vars, 
 	//processed variable
 	std::vector<double> S_1(max_node);
 
-	for (auto i = 1; i < max_node; i++) {
+	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 0; i < max_node; i++) {
 		
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
 		double temp_2	=	old_p[i+1] + 2*old_p[i] + old_p[i-1];
 		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i-1];	
 		
-		S_1[i]		=	(temp_1/temp_2)*temp_3;
+		//S_1[i]		=	(temp_1/temp_2)*temp_3;
+		S_1[i]		=	0;
 	}
 
 	return S_1;
@@ -173,14 +177,18 @@ std::vector<double> Main_Final::calc_S_2_final(Parameters pars, Variables vars, 
 	//processed variable
 	std::vector<double> S_2(max_node);
 
-	for (auto i = 1; i < max_node; i++) {
+	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 0; i < max_node; i++) {
 		
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
 		double temp_2	=	old_p[i+1] + 2*old_p[i] + old_p[i-1];
 		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i-1];	
 		
-		S_2[i]		=	(temp_1/temp_2)*temp_3;
+		//S_2[i]		=	(temp_1/temp_2)*temp_3;
+		S_2[i]		=	0;
+//		if (std::isnan(S_2[i])) {
+//			std::cout << i << " " << p[i-1] << " " << p[i] << " " << p[i+1] << std::endl;
+//		}
 	}
 
 	return S_2;
@@ -200,14 +208,15 @@ std::vector<double> Main_Final::calc_S_3_final(Parameters pars, Variables vars, 
 	//processed variable
 	std::vector<double> S_3(max_node);
 
-	for (auto i = 1; i < max_node; i++) {
+	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 0; i < max_node; i++) {
 		
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
 		double temp_2	=	old_p[i+1] + 2*old_p[i] + old_p[i-1];
 		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i-1];	
 		
-		S_3[i]		=	(temp_1/temp_2)*temp_3;
+		//S_3[i]		=	(temp_1/temp_2)*temp_3;
+		S_3[i]		=	0;
 	}
 
 	return S_3;

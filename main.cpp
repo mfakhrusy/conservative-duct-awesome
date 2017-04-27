@@ -171,10 +171,6 @@ int main() {
 		U_2	=	main_final.calc_new_U_2(pars, vars);
 		U_3	=	main_final.calc_new_U_3(pars, vars);
 	
-	//	for (auto i = 0; i < U_1.size(); i++) {
-	//		std::cout << i << " " << S_1[i] << std::endl;
-	//	}
-		
 		//preserve old pressure
 		old_p		=	p;
 
@@ -221,6 +217,10 @@ int main() {
 		post_output.print_vector(vars_corrector.dU_2_dt, "dU_2_dt_corrector");
 		post_output.print_vector(vars_corrector.dU_3_dt, "dU_3_dt_corrector");
 	
+		post_output.print_vector(U_1, "U_1_corrector");
+		post_output.print_vector(U_2, "U_2_corrector");
+		post_output.print_vector(U_3, "U_3_corrector");
+	
 		//CHECK NEW VALUE
 		
 		post_output.print_vector(rho, "rho");
@@ -246,7 +246,7 @@ int main() {
 		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 
 		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
-//		if (count >= 1) {
+		//if (count >= 4000) {
 		if (count >= 50000) {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	

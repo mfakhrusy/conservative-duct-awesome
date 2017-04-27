@@ -218,8 +218,8 @@ std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars
 	std::vector<double> new_U_1(max_node);
 
 	//process U_1
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		new_U_1[i]	=	U_1[i] + dU_1_dt[i]*delta_t + S_1[i];
 	}
 
@@ -243,10 +243,9 @@ std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars
 	std::vector<double> new_U_2(max_node);
 
 	//process U_2
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		new_U_2[i]	=	U_2[i] + dU_2_dt[i]*delta_t + S_2[i];
-//		std::cout << i << " " << new_U_2[i] << " " << U_2[i] << " " << dU_2_dt[i] << " " << delta_t << " " << S_2[i] << std::endl;
 	}
 
 	return new_U_2;
@@ -269,8 +268,8 @@ std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars
 	std::vector<double> new_U_3(max_node);
 
 	//process U_3
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		new_U_3[i]	=	U_3[i] + dU_3_dt[i]*delta_t + S_3[i];
 	}
 
@@ -292,8 +291,8 @@ std::vector<double> Main_Predictor::calc_new_rho(Parameters pars, Variables vars
 	std::vector<double> new_rho(max_node);
 
 	//process rho
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		new_rho[i]	=	U_1[i]/area[i];
 	}
 
@@ -317,8 +316,8 @@ std::vector<double> Main_Predictor::calc_new_T(Parameters pars, Variables vars) 
 	std::vector<double> new_T(max_node);
 
 	//process T
-	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
+	//for (auto i = 1; i < max_node - 1; i++) {
+	for (auto i = 0; i < max_node; i++) {
 		
 		double temp_1	=	U_3[i]/U_1[i];
 		double temp_2	=	pow((U_2[i]/U_1[i]),2);
@@ -351,7 +350,8 @@ std::vector<double> Main_Predictor::calc_S_1(Parameters pars, Variables vars) {
 		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
 		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i-1];	
 		
-		S_1[i]		=	(temp_1/temp_2)*temp_3;
+//		S_1[i]		=	(temp_1/temp_2)*temp_3;
+		S_1[i]		=	0;
 	}
 
 	return S_1;
@@ -378,7 +378,8 @@ std::vector<double> Main_Predictor::calc_S_2(Parameters pars, Variables vars) {
 		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
 		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i-1];	
 		
-		S_2[i]		=	(temp_1/temp_2)*temp_3;
+//		S_2[i]		=	(temp_1/temp_2)*temp_3;
+		S_2[i]		=	0;
 	}
 
 	return S_2;
@@ -405,9 +406,9 @@ std::vector<double> Main_Predictor::calc_S_3(Parameters pars, Variables vars) {
 		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
 		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i-1];	
 		
-		S_3[i]		=	(temp_1/temp_2)*temp_3;
+//		S_3[i]		=	(temp_1/temp_2)*temp_3;
+		S_3[i]		=	0;
 	}
 
 	return S_3;
 }
-
