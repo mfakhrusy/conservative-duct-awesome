@@ -52,10 +52,7 @@ int main() {
 	std::vector<double> &F_1		=	vars.F_1;
 	std::vector<double> &F_2		=	vars.F_2;
 	std::vector<double> &F_3		=	vars.F_3;
-	//s1 s2 s3
-	std::vector<double> &S_1		=	vars.S_1;
-	std::vector<double> &S_2		=	vars.S_2;
-	std::vector<double> &S_3		=	vars.S_3;
+	//
 	//sound speed
 	std::vector<double> &sound_speed	=	vars.sound_speed;		//speed of sound
 	//delta x and delta t
@@ -110,11 +107,6 @@ int main() {
 		vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt_predictor(pars, vars_predictor);
 		vars_predictor.dU_3_dt	=	main_predictor.calc_dU_3_dt_predictor(pars, vars_predictor);
 	
-		//smoothing constant
-		vars_predictor.S_1	=	main_predictor.calc_S_1(pars, vars_predictor);
-		vars_predictor.S_2	=	main_predictor.calc_S_2(pars, vars_predictor);
-		vars_predictor.S_3	=	main_predictor.calc_S_3(pars, vars_predictor);
-
 		//U_1 U_2 U_3
 		vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
 		vars_predictor.U_2	=	main_predictor.calc_new_U_2(pars, vars_predictor);
@@ -161,10 +153,6 @@ int main() {
 		dU_2_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_2_dt, vars_corrector.dU_2_dt);
 		dU_3_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_3_dt, vars_corrector.dU_3_dt);
 	
-		//calculate smoothing for final step
-		S_1	=	main_final.calc_S_1_final(pars, vars, old_p);
-		S_2	=	main_final.calc_S_2_final(pars, vars, old_p);
-		S_3	=	main_final.calc_S_3_final(pars, vars, old_p);
 
 		//calculate new U_1, U_2, and U_3
 		U_1	=	main_final.calc_new_U_1(pars, vars);
@@ -227,11 +215,6 @@ int main() {
 		post_output.print_vector(v, "v");
 		post_output.print_vector(T, "T");
 
-		//CHECK SMOOTHING VALUE
-		post_output.print_vector(S_1, "S_1");
-		post_output.print_vector(S_2, "S_2");
-		post_output.print_vector(S_3, "S_3");
-
 		//PRINT RESULT
 		post_output.print_result(max_node, vars);
 	
@@ -246,8 +229,8 @@ int main() {
 		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 
 		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
-		//if (count >= 4000) {
-		if (count >= 50000) {
+		if (count >= 1) {
+//		if (count >= 50000) {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	
 		}

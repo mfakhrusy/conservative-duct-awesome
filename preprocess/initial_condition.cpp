@@ -14,14 +14,15 @@ Initial_Condition::Initial_Condition(Parameters pars, Variables &vars) {
 	std::vector<double> &U_3	=	vars.U_3;
 
 	//computation of initial conditions
-	rho	=	calc_initial_condition_rho(pars, vars);
-	T	=	calc_initial_condition_T(pars, vars);
+//	rho	=	calc_initial_condition_rho(pars, vars);
+//	T	=	calc_initial_condition_T(pars, vars);
+	rho	=	calc_initial_condition_rho_2(pars, vars);
+	T	=	calc_initial_condition_T_2(pars, vars);
 	v	=	calc_initial_condition_v(pars, vars);
 	p	=	calc_initial_condition_p(pars, vars);
 	U_1	=	calc_initial_condition_U_1(pars, vars);
 	U_2	=	calc_initial_condition_U_2(pars, vars);
 	U_3	=	calc_initial_condition_U_3(pars, vars);
-
 }
 
 //initial condition for rho
@@ -214,3 +215,76 @@ std::vector<double> Initial_Condition::calc_initial_condition_U_3(Parameters par
 
 	return U_3;
 }
+
+//FOR CHECKING PURPOSE
+
+//initial condition for rho_v2
+std::vector<double> Initial_Condition::calc_initial_condition_rho_2(Parameters pars, Variables vars) {
+	
+	//local vars and pars
+	int max_node		=	pars.max_node;
+	double duct_length	=	pars.duct_length;
+	std::vector<double> x	=	vars.x;
+
+	//local boundaries
+	double limit_0	=	duct_length - duct_length;
+	double limit_1	=	duct_length/6;			
+	double limit_2	=	duct_length/2;
+	double limit_3	=	duct_length*0.7;
+
+	//processed vars
+	std::vector<double> rho(max_node);
+
+	//processing
+	//for (auto i = 1; i < rho.size() - 1; i++) {
+	for (auto i = 0; i < rho.size(); i++) {
+		
+		if (x[i] >= limit_0 && x[i] <= limit_1) {
+			rho[i]	=	1.0;
+		} else if (x[i] > limit_1 && x[i] <= limit_2) {
+			rho[i]	=	1.0 - 0.366*(x[i] - limit_1);
+		} else if (x[i] > limit_2 && x[i] <= duct_length) {
+			rho[i]	=	0.634 - 0.3879*(x[i] - limit_2);
+		} else {
+			std::cout << "There are something wrong in calc_initial_condition_rho!\n";
+		}
+	}
+
+	return rho;
+}
+
+//initial condition for T_v2
+std::vector<double> Initial_Condition::calc_initial_condition_T_2(Parameters pars, Variables vars) {
+	
+	//local vars and pars
+	int max_node		=	pars.max_node;
+	double duct_length	=	pars.duct_length;
+	std::vector<double> x	=	vars.x;
+
+	//local boundaries
+	double limit_0	=	duct_length - duct_length;
+	double limit_1	=	duct_length/6;			
+	double limit_2	=	duct_length/2;
+
+	//processed vars
+	std::vector<double> T(max_node);
+
+	//processing
+	//for (auto i = 1; i < T.size() - 1; i++) {
+	for (auto i = 0; i < T.size(); i++) {
+		
+		if (x[i] >= limit_0 && x[i] <= limit_1) {
+			T[i]	=	1.0;
+		} else if (x[i] > limit_1 && x[i] <= limit_2) {
+			T[i]	=	1.0 - 0.167*(x[i] - limit_1);
+		} else if (x[i] > limit_2 && x[i] <= duct_length) {
+			T[i]	=	0.833 - 0.3507*(x[i] - limit_2);
+		} else {
+			std::cout << "There are something wrong in calc_initial_condition_T!\n";
+		}
+	}
+
+	return T;
+}
+
+

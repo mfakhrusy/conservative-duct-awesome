@@ -212,7 +212,6 @@ std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars
 	const double delta_t		=	vars.delta_t;
 	std::vector<double> U_1		=	vars.U_1;
 	std::vector<double> dU_1_dt	=	vars.dU_1_dt;
-	std::vector<double> S_1		=	vars.S_1;
 
 	//processed variable
 	std::vector<double> new_U_1(max_node);
@@ -220,7 +219,7 @@ std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars
 	//process U_1
 	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
-		new_U_1[i]	=	U_1[i] + dU_1_dt[i]*delta_t + S_1[i];
+		new_U_1[i]	=	U_1[i] + dU_1_dt[i]*delta_t;
 	}
 
 	return new_U_1;
@@ -237,7 +236,6 @@ std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars
 	const double delta_t		=	vars.delta_t;
 	std::vector<double> U_2		=	vars.U_2;
 	std::vector<double> dU_2_dt	=	vars.dU_2_dt;
-	std::vector<double> S_2		=	vars.S_2;
 
 	//processed variable
 	std::vector<double> new_U_2(max_node);
@@ -245,7 +243,7 @@ std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars
 	//process U_2
 	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
-		new_U_2[i]	=	U_2[i] + dU_2_dt[i]*delta_t + S_2[i];
+		new_U_2[i]	=	U_2[i] + dU_2_dt[i]*delta_t;
 	}
 
 	return new_U_2;
@@ -262,7 +260,6 @@ std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars
 	const double delta_t			=	vars.delta_t;
 	std::vector<double> U_3		=	vars.U_3;
 	std::vector<double> dU_3_dt	=	vars.dU_3_dt;
-	std::vector<double> S_3		=	vars.S_3;
 
 	//processed variable
 	std::vector<double> new_U_3(max_node);
@@ -270,7 +267,7 @@ std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars
 	//process U_3
 	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
-		new_U_3[i]	=	U_3[i] + dU_3_dt[i]*delta_t + S_3[i];
+		new_U_3[i]	=	U_3[i] + dU_3_dt[i]*delta_t;
 	}
 
 	return new_U_3;
@@ -329,86 +326,3 @@ std::vector<double> Main_Predictor::calc_new_T(Parameters pars, Variables vars) 
 
 }
 
-//smoothing function
-std::vector<double> Main_Predictor::calc_S_1(Parameters pars, Variables vars) {
-
-	//local pars
-	const int max_node		=	pars.max_node;
-	const double smoothing_constant	=	pars.smoothing_constant;
-
-	//local vars
-	std::vector<double> p	=	vars.p;
-	std::vector<double> U_1	=	vars.U_1;
-
-	//processed variable
-	std::vector<double> S_1(max_node);
-
-	for (auto i = 1; i < max_node-1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
-		
-		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
-		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
-		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i-1];	
-		
-//		S_1[i]		=	(temp_1/temp_2)*temp_3;
-		S_1[i]		=	0;
-	}
-
-	return S_1;
-}
-
-//smoothing function
-std::vector<double> Main_Predictor::calc_S_2(Parameters pars, Variables vars) {
-
-	//local pars
-	const int max_node		=	pars.max_node;
-	const double smoothing_constant	=	pars.smoothing_constant;
-
-	//local vars
-	std::vector<double> p	=	vars.p;
-	std::vector<double> U_2	=	vars.U_2;
-
-	//processed variable
-	std::vector<double> S_2(max_node);
-
-	for (auto i = 1; i < max_node-1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
-		
-		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
-		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
-		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i-1];	
-		
-//		S_2[i]		=	(temp_1/temp_2)*temp_3;
-		S_2[i]		=	0;
-	}
-
-	return S_2;
-}
-
-//smoothing function
-std::vector<double> Main_Predictor::calc_S_3(Parameters pars, Variables vars) {
-
-	//local pars
-	const int max_node		=	pars.max_node;
-	const double smoothing_constant	=	pars.smoothing_constant;
-
-	//local vars
-	std::vector<double> p	=	vars.p;
-	std::vector<double> U_3	=	vars.U_3;
-
-	//processed variable
-	std::vector<double> S_3(max_node);
-
-	for (auto i = 1; i < max_node-1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
-		
-		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1])*smoothing_constant;
-		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
-		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i-1];	
-		
-//		S_3[i]		=	(temp_1/temp_2)*temp_3;
-		S_3[i]		=	0;
-	}
-
-	return S_3;
-}
