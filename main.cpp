@@ -100,7 +100,7 @@ int main() {
 		vars_predictor.F_1	=	main_predictor.calc_F_1_predictor(pars, vars_predictor);
 		vars_predictor.F_2	=	main_predictor.calc_F_2_predictor(pars, vars_predictor);
 		vars_predictor.F_3	=	main_predictor.calc_F_3_predictor(pars, vars_predictor);
-		vars_predictor.J_2	=	main_predictor.calc_J_2(pars, vars_predictor);
+		vars_predictor.J_2	=	main_predictor.calc_J_2_predictor(pars, vars_predictor);
 		
 		//time derivative
 		vars_predictor.dU_1_dt	=	main_predictor.calc_dU_1_dt_predictor(pars, vars_predictor);
@@ -131,7 +131,7 @@ int main() {
 		vars_corrector.F_1	=	main_corrector.calc_F_1_corrector(pars, vars_corrector);
 		vars_corrector.F_2	=	main_corrector.calc_F_2_corrector(pars, vars_corrector);
 		vars_corrector.F_3	=	main_corrector.calc_F_3_corrector(pars, vars_corrector);
-		vars_corrector.J_2	=	main_corrector.calc_J_2(pars, vars_corrector);
+		vars_corrector.J_2	=	main_corrector.calc_J_2_corrector(pars, vars_corrector);
 	
 		//time derivative
 		vars_corrector.dU_1_dt	=	main_corrector.calc_dU_1_dt_corrector(pars, vars_corrector);

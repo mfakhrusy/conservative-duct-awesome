@@ -9,7 +9,7 @@ class Main_Predictor {
 		std::vector<double> calc_F_1_predictor(Parameters pars, Variables vars);
 		std::vector<double> calc_F_2_predictor(Parameters pars, Variables vars);
 		std::vector<double> calc_F_3_predictor(Parameters pars, Variables vars);
-		std::vector<double> calc_J_2(Parameters pars, Variables vars);
+		std::vector<double> calc_J_2_predictor(Parameters pars, Variables vars);
 
 		std::vector<double> calc_dU_1_dt_predictor(Parameters pars, Variables vars);
 		std::vector<double> calc_dU_2_dt_predictor(Parameters pars, Variables vars);

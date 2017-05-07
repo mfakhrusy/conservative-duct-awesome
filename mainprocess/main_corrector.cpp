@@ -117,6 +117,31 @@ std::vector<double> Main_Corrector::calc_F_3_corrector(Parameters pars, Variable
 	return F_3_corrector;
 }
 
+//calculate J_2_corrector
+std::vector<double> Main_Corrector::calc_J_2_corrector(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	double gamma	=	pars.gamma;
+
+	//local vars
+	std::vector<double> area	=	vars.area;
+	std::vector<double> x		=	vars.x;
+	std::vector<double> rho		=	vars.rho;
+	std::vector<double> T		=	vars.T;
+	//processed variable
+	std::vector<double> J_2(max_node);
+
+	//process J_2
+	for (auto i = 1; i < max_node - 1; i++) {
+//	for (auto i = 0; i < max_node - 1; i++) {
+		
+		double temp_1	=	(area[i] - area[i-1])/(x[i] - x[i-1]);
+		J_2[i]		=	(1/gamma)*rho[i]*T[i]*temp_1;
+	}
+
+	return J_2;
+}
 
 //calculate dU_1_dt_corrector
 std::vector<double> Main_Corrector::calc_dU_1_dt_corrector(Parameters pars, Variables vars) {

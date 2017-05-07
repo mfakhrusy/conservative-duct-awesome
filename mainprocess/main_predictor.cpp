@@ -104,13 +104,14 @@ std::vector<double> Main_Predictor::calc_F_3_predictor(Parameters pars, Variable
 		double temp_2	=	pow(U_2[i],3)/pow(U_1[i],2);
 
 		F_3[i]		=	gamma*temp_1 - 0.5*gamma*(gamma - 1)*temp_2;
+		//std::cout << i << " " << F_3[i] << " " << U_1[i] << " " << U_2[i] << " " << " " << U_3[i] << temp_1 << " " << temp_2 << std::endl;
 	}
 
 	return F_3;
 }
 
-//calculate J_2
-std::vector<double> Main_Predictor::calc_J_2(Parameters pars, Variables vars) {
+//calculate J_2_predictor
+std::vector<double> Main_Predictor::calc_J_2_predictor(Parameters pars, Variables vars) {
 
 	//local pars
 	const int max_node	=	pars.max_node;
