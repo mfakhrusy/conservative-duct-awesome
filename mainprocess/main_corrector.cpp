@@ -183,6 +183,7 @@ std::vector<double> Main_Corrector::calc_dU_2_dt_corrector(Parameters pars, Vari
 	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 1; i < max_node; i++) {
 		dU_2_dt_corrector[i]	=	-1*((F_2[i] - F_2[i-1])/delta_x[i-1]) + J_2[i];
+		std::cout << i << " " << dU_2_dt_corrector[i] << " " << F_2[i] << " " << F_2[i-1] << " " << J_2[i] << " " << delta_x[i-1] << std::endl;
 	}
 
 	return dU_2_dt_corrector;
@@ -208,4 +209,82 @@ std::vector<double> Main_Corrector::calc_dU_3_dt_corrector(Parameters pars, Vari
 	}
 
 	return dU_3_dt_corrector;
+}
+
+//calculate S_1 (smoothing on U_1)
+std::vector<double> Main_Corrector::calc_S_1_corrector(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double C_x	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_1	=	vars.U_1;
+	
+	//processed variable
+	std::vector<double> S_1(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
+		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
+		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i+1];
+
+		S_1[i]	=	C_x*(temp_1/temp_2)*temp_3;
+	}
+
+	return S_1;
+}
+
+//calculate S_2 (smoothing on U_2)
+std::vector<double> Main_Corrector::calc_S_2_corrector(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double C_x	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_2	=	vars.U_2;
+	
+	//processed variable
+	std::vector<double> S_2(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
+		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
+		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i+1];
+
+		S_2[i]	=	C_x*(temp_2/temp_2)*temp_3;
+	}
+
+	return S_2;
+}
+
+//calculate S_3 (smoothing on U_3)
+std::vector<double> Main_Corrector::calc_S_3_corrector(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double C_x	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_3	=	vars.U_3;
+	
+	//processed variable
+	std::vector<double> S_3(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
+		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
+		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i+1];
+
+		S_3[i]	=	C_x*(temp_3/temp_3)*temp_3;
+	}
+
+	return S_3;
 }

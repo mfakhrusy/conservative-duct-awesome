@@ -16,6 +16,12 @@ class Main_Corrector: public Main_Predictor {
 		std::vector<double> calc_dU_1_dt_corrector(Parameters pars, Variables vars);
 		std::vector<double> calc_dU_2_dt_corrector(Parameters pars, Variables vars);
 		std::vector<double> calc_dU_3_dt_corrector(Parameters pars, Variables vars);
+
+		//smoothing function
+		std::vector<double> calc_S_1_corrector(Parameters pars, Variables vars);
+		std::vector<double> calc_S_2_corrector(Parameters pars, Variables vars);
+		std::vector<double> calc_S_3_corrector(Parameters pars, Variables vars);
+
 };
 
 #endif

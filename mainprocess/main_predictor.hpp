@@ -23,9 +23,9 @@ class Main_Predictor {
 		std::vector<double> calc_new_T(Parameters pars, Variables vars);
 
 		//smoothing function
-		std::vector<double> calc_S_1(Parameters pars, Variables vars);
-		std::vector<double> calc_S_2(Parameters pars, Variables vars);
-		std::vector<double> calc_S_3(Parameters pars, Variables vars);
+		std::vector<double> calc_S_1_predictor(Parameters pars, Variables vars);
+		std::vector<double> calc_S_2_predictor(Parameters pars, Variables vars);
+		std::vector<double> calc_S_3_predictor(Parameters pars, Variables vars);
 
 };
 

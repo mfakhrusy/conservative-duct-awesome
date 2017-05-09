@@ -52,7 +52,10 @@ int main() {
 	std::vector<double> &F_1		=	vars.F_1;
 	std::vector<double> &F_2		=	vars.F_2;
 	std::vector<double> &F_3		=	vars.F_3;
-	//
+	//S_1 S_2 S_3
+	std::vector<double> &S_1		=	vars.S_1;
+	std::vector<double> &S_2		=	vars.S_2;
+	std::vector<double> &S_3		=	vars.S_3;
 	//sound speed
 	std::vector<double> &sound_speed	=	vars.sound_speed;		//speed of sound
 	//delta x and delta t
@@ -102,10 +105,16 @@ int main() {
 		vars_predictor.F_3	=	main_predictor.calc_F_3_predictor(pars, vars_predictor);
 		vars_predictor.J_2	=	main_predictor.calc_J_2_predictor(pars, vars_predictor);
 		
+		//std::cout << "lala: " << vars_predictor.U_3[30] << " " << vars.U_3[30] << std::endl;
 		//time derivative
 		vars_predictor.dU_1_dt	=	main_predictor.calc_dU_1_dt_predictor(pars, vars_predictor);
 		vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt_predictor(pars, vars_predictor);
 		vars_predictor.dU_3_dt	=	main_predictor.calc_dU_3_dt_predictor(pars, vars_predictor);
+
+		//calculate smoothing function
+		vars_predictor.S_1	=	main_predictor.calc_S_1_predictor(pars, vars_predictor);
+		vars_predictor.S_2	=	main_predictor.calc_S_2_predictor(pars, vars_predictor);
+		vars_predictor.S_3	=	main_predictor.calc_S_3_predictor(pars, vars_predictor);
 	
 		//U_1 U_2 U_3
 		vars_predictor.U_1	=	main_predictor.calc_new_U_1(pars, vars_predictor);
@@ -137,6 +146,11 @@ int main() {
 		vars_corrector.dU_1_dt	=	main_corrector.calc_dU_1_dt_corrector(pars, vars_corrector);
 		vars_corrector.dU_2_dt	=	main_corrector.calc_dU_2_dt_corrector(pars, vars_corrector);
 		vars_corrector.dU_3_dt	=	main_corrector.calc_dU_3_dt_corrector(pars, vars_corrector);
+	
+		//calculate smoothing function
+		vars_corrector.S_1	=	main_corrector.calc_S_1_corrector(pars, vars_corrector);
+		vars_corrector.S_2	=	main_corrector.calc_S_2_corrector(pars, vars_corrector);
+		vars_corrector.S_3	=	main_corrector.calc_S_3_corrector(pars, vars_corrector);
 		
 		//---------- fourth -> main_final ----------//
 		
@@ -153,6 +167,10 @@ int main() {
 		dU_2_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_2_dt, vars_corrector.dU_2_dt);
 		dU_3_dt		=	main_final.calc_dU_dt_average(pars, vars_predictor.dU_3_dt, vars_corrector.dU_3_dt);
 	
+		//copy smoothing function from vars_corrector object to vars object
+		S_1	=	vars_corrector.S_1;
+		S_2	=	vars_corrector.S_2;
+		S_3	=	vars_corrector.S_3;
 
 		//calculate new U_1, U_2, and U_3
 		U_1	=	main_final.calc_new_U_1(pars, vars);
@@ -205,6 +223,11 @@ int main() {
 		post_output.print_vector(vars_corrector.dU_2_dt, "dU_2_dt_corrector");
 		post_output.print_vector(vars_corrector.dU_3_dt, "dU_3_dt_corrector");
 	
+		//CHECK SMOOTHED CORRECTED VALUE
+		post_output.print_vector(vars_corrector.S_1, "S_1_corrector");
+		post_output.print_vector(vars_corrector.S_2, "S_2_corrector");
+		post_output.print_vector(vars_corrector.S_3, "S_3_corrector");
+
 		post_output.print_vector(U_1, "U_1_corrector");
 		post_output.print_vector(U_2, "U_2_corrector");
 		post_output.print_vector(U_3, "U_3_corrector");

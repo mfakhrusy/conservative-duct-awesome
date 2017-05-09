@@ -27,6 +27,7 @@ Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) 
 
 	//BC for U_3
 	U_3[max_node - 1]	=	(pressure_exit*area[max_node - 1])/(gamma - 1) + 0.5*gamma*U_2[max_node - 1]*v[max_node - 1];
+//	U_3[max_node - 1]	=	2*U_3[max_node - 2] - U_3[max_node - 3];
 
 	return vars;
 }
@@ -76,6 +77,7 @@ std::vector<double> Main_Predictor::calc_F_2_predictor(Parameters pars, Variable
 		double temp_2	=	U_3[i] - 0.5*gamma*temp_1;
 
 		F_2[i]		=	temp_1 + ((gamma - 1)/(gamma))*temp_2;
+//		std::cout << i << " " << U_1[i] << " " << U_2[i] << " " << U_3[i] << std::endl;
 	}
 
 	return F_2;
@@ -213,6 +215,8 @@ std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars
 	const double delta_t		=	vars.delta_t;
 	std::vector<double> U_1		=	vars.U_1;
 	std::vector<double> dU_1_dt	=	vars.dU_1_dt;
+	//add smoothing
+	std::vector<double> S_1		=	vars.S_1;
 
 	//processed variable
 	std::vector<double> new_U_1(max_node);
@@ -220,7 +224,8 @@ std::vector<double> Main_Predictor::calc_new_U_1(Parameters pars, Variables vars
 	//process U_1
 	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
-		new_U_1[i]	=	U_1[i] + dU_1_dt[i]*delta_t;
+//		new_U_1[i]	=	U_1[i] + dU_1_dt[i]*delta_t;
+		new_U_1[i]	=	U_1[i] + dU_1_dt[i]*delta_t + S_1[i];
 	}
 
 	return new_U_1;
@@ -237,6 +242,8 @@ std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars
 	const double delta_t		=	vars.delta_t;
 	std::vector<double> U_2		=	vars.U_2;
 	std::vector<double> dU_2_dt	=	vars.dU_2_dt;
+	//add smoothing
+	std::vector<double> S_2		=	vars.S_2;
 
 	//processed variable
 	std::vector<double> new_U_2(max_node);
@@ -244,7 +251,8 @@ std::vector<double> Main_Predictor::calc_new_U_2(Parameters pars, Variables vars
 	//process U_2
 	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
-		new_U_2[i]	=	U_2[i] + dU_2_dt[i]*delta_t;
+//		new_U_2[i]	=	U_2[i] + dU_2_dt[i]*delta_t;
+		new_U_2[i]	=	U_2[i] + dU_2_dt[i]*delta_t + S_2[i];
 	}
 
 	return new_U_2;
@@ -261,6 +269,8 @@ std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars
 	const double delta_t			=	vars.delta_t;
 	std::vector<double> U_3		=	vars.U_3;
 	std::vector<double> dU_3_dt	=	vars.dU_3_dt;
+	//add smoothing
+	std::vector<double> S_3		=	vars.S_3;
 
 	//processed variable
 	std::vector<double> new_U_3(max_node);
@@ -268,7 +278,8 @@ std::vector<double> Main_Predictor::calc_new_U_3(Parameters pars, Variables vars
 	//process U_3
 	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
-		new_U_3[i]	=	U_3[i] + dU_3_dt[i]*delta_t;
+//		new_U_3[i]	=	U_3[i] + dU_3_dt[i]*delta_t;
+		new_U_3[i]	=	U_3[i] + dU_3_dt[i]*delta_t + S_3[i];
 	}
 
 	return new_U_3;
@@ -303,7 +314,7 @@ std::vector<double> Main_Predictor::calc_new_T(Parameters pars, Variables vars) 
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> U_1		=	vars.U_1;
@@ -327,3 +338,80 @@ std::vector<double> Main_Predictor::calc_new_T(Parameters pars, Variables vars) 
 
 }
 
+//calculate S_1 (smoothing on U_1)
+std::vector<double> Main_Predictor::calc_S_1_predictor(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double C_x	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_1	=	vars.U_1;
+	
+	//processed variable
+	std::vector<double> S_1(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
+		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
+		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i+1];
+
+		S_1[i]	=	C_x*(temp_1/temp_2)*temp_3;
+	}
+
+	return S_1;
+}
+
+//calculate S_2 (smoothing on U_2)
+std::vector<double> Main_Predictor::calc_S_2_predictor(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double C_x	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_2	=	vars.U_2;
+	
+	//processed variable
+	std::vector<double> S_2(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
+		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
+		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i+1];
+
+		S_2[i]	=	C_x*(temp_2/temp_2)*temp_3;
+	}
+
+	return S_2;
+}
+
+//calculate S_3 (smoothing on U_3)
+std::vector<double> Main_Predictor::calc_S_3_predictor(Parameters pars, Variables vars) {
+
+	//local pars
+	const int max_node	=	pars.max_node;
+	const double C_x	=	pars.smoothing_constant;
+
+	//local vars
+	std::vector<double> p	=	vars.p;
+	std::vector<double> U_3	=	vars.U_3;
+	
+	//processed variable
+	std::vector<double> S_3(max_node);
+
+	for (auto i = 1; i < max_node - 1; i++) {
+	
+		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
+		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
+		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i+1];
+
+		S_3[i]	=	C_x*(temp_3/temp_3)*temp_3;
+	}
+
+	return S_3;
+}
