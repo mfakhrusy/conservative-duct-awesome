@@ -252,8 +252,8 @@ int main() {
 		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 
 		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
-		if (count >= 1) {
-//		if (count >= 50000) {
+//		if (count >= 1) {
+		if (count >= 50000) {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	
 		}

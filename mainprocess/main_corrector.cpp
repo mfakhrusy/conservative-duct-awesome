@@ -183,7 +183,7 @@ std::vector<double> Main_Corrector::calc_dU_2_dt_corrector(Parameters pars, Vari
 	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 1; i < max_node; i++) {
 		dU_2_dt_corrector[i]	=	-1*((F_2[i] - F_2[i-1])/delta_x[i-1]) + J_2[i];
-		std::cout << i << " " << dU_2_dt_corrector[i] << " " << F_2[i] << " " << F_2[i-1] << " " << J_2[i] << " " << delta_x[i-1] << std::endl;
+//		std::cout << i << " " << dU_2_dt_corrector[i] << " " << F_2[i] << " " << F_2[i-1] << " " << J_2[i] << " " << delta_x[i-1] << std::endl;
 	}
 
 	return dU_2_dt_corrector;
