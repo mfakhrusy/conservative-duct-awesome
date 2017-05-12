@@ -6,8 +6,8 @@ Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) 
 
 	//local pars
 	const int max_node		=	pars.max_node;
-	double gamma		=	pars.gamma;
-	double pressure_exit	=	pars.pressure_exit;
+	const double gamma		=	pars.gamma;
+	const double pressure_exit	=	pars.pressure_exit;
 
 	//local vars
 	std::vector<double> &U_1	=	vars.U_1;
@@ -21,12 +21,14 @@ Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) 
 
 	//BC for U_2
 	U_2[max_node - 1]	=	2*U_2[max_node - 2] - U_2[max_node - 3];
+//	std::cout << "BC U_2: " << U_2[max_node - 1] << " " << U_2[max_node - 2] << " " << U_2[max_node - 3] << std::endl;
 
 	//BC for v
 	v[max_node - 1]		=	U_2[max_node - 1]/U_1[max_node - 1];
 
 	//BC for U_3
 	U_3[max_node - 1]	=	(pressure_exit*area[max_node - 1])/(gamma - 1) + 0.5*gamma*U_2[max_node - 1]*v[max_node - 1];
+	//BC for U_3 (non-shock):
 //	U_3[max_node - 1]	=	2*U_3[max_node - 2] - U_3[max_node - 3];
 
 	return vars;
@@ -59,7 +61,7 @@ std::vector<double> Main_Predictor::calc_F_2_predictor(Parameters pars, Variable
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> U_1		=	vars.U_1;
@@ -77,7 +79,6 @@ std::vector<double> Main_Predictor::calc_F_2_predictor(Parameters pars, Variable
 		double temp_2	=	U_3[i] - 0.5*gamma*temp_1;
 
 		F_2[i]		=	temp_1 + ((gamma - 1)/(gamma))*temp_2;
-//		std::cout << i << " " << U_1[i] << " " << U_2[i] << " " << U_3[i] << std::endl;
 	}
 
 	return F_2;
@@ -88,7 +89,7 @@ std::vector<double> Main_Predictor::calc_F_3_predictor(Parameters pars, Variable
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> U_1		=	vars.U_1;
@@ -106,7 +107,6 @@ std::vector<double> Main_Predictor::calc_F_3_predictor(Parameters pars, Variable
 		double temp_2	=	pow(U_2[i],3)/pow(U_1[i],2);
 
 		F_3[i]		=	gamma*temp_1 - 0.5*gamma*(gamma - 1)*temp_2;
-		//std::cout << i << " " << F_3[i] << " " << U_1[i] << " " << U_2[i] << " " << " " << U_3[i] << temp_1 << " " << temp_2 << std::endl;
 	}
 
 	return F_3;
@@ -117,7 +117,7 @@ std::vector<double> Main_Predictor::calc_J_2_predictor(Parameters pars, Variable
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> area	=	vars.area;
@@ -200,6 +200,7 @@ std::vector<double> Main_Predictor::calc_dU_3_dt_predictor(Parameters pars, Vari
 	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 0; i < max_node - 1; i++) {
 		dU_3_dt_predictor[i]	=	-1*((F_3[i+1] - F_3[i])/delta_x[i]);
+//		std::cout << i << " " << dU_3_dt_predictor[i] << std::endl;
 	}
 
 	return dU_3_dt_predictor;
@@ -309,7 +310,7 @@ std::vector<double> Main_Predictor::calc_new_rho(Parameters pars, Variables vars
 
 }
 
-//calculate new rho
+//calculate new T
 std::vector<double> Main_Predictor::calc_new_T(Parameters pars, Variables vars) {
 
 	//local pars
@@ -355,8 +356,8 @@ std::vector<double> Main_Predictor::calc_S_1_predictor(Parameters pars, Variable
 	for (auto i = 1; i < max_node - 1; i++) {
 	
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
-		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
-		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i+1];
+		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
+		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i-1];
 
 		S_1[i]	=	C_x*(temp_1/temp_2)*temp_3;
 	}
@@ -381,10 +382,10 @@ std::vector<double> Main_Predictor::calc_S_2_predictor(Parameters pars, Variable
 	for (auto i = 1; i < max_node - 1; i++) {
 	
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
-		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
-		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i+1];
+		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
+		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i-1];
 
-		S_2[i]	=	C_x*(temp_2/temp_2)*temp_3;
+		S_2[i]	=	C_x*(temp_1/temp_2)*temp_3;
 	}
 
 	return S_2;
@@ -407,10 +408,10 @@ std::vector<double> Main_Predictor::calc_S_3_predictor(Parameters pars, Variable
 	for (auto i = 1; i < max_node - 1; i++) {
 	
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
-		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
-		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i+1];
+		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
+		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i-1];
 
-		S_3[i]	=	C_x*(temp_3/temp_3)*temp_3;
+		S_3[i]	=	C_x*(temp_1/temp_2)*temp_3;
 	}
 
 	return S_3;

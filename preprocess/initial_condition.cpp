@@ -13,9 +13,10 @@ Initial_Condition::Initial_Condition(Parameters pars, Variables &vars) {
 	std::vector<double> &U_2	=	vars.U_2;
 	std::vector<double> &U_3	=	vars.U_3;
 
-	//computation of initial conditions
+	//computation of initial conditions: default is for shock
 	rho	=	calc_initial_condition_rho(pars, vars);
 	T	=	calc_initial_condition_T(pars, vars);
+//	rho and T below is for conservative non-shock!
 //	rho	=	calc_initial_condition_rho_2(pars, vars);
 //	T	=	calc_initial_condition_T_2(pars, vars);
 	v	=	calc_initial_condition_v(pars, vars);

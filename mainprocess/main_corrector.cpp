@@ -6,8 +6,8 @@ Variables Main_Corrector::bc_inflow_corrector(Parameters pars, Variables vars) {
 
 	//local pars
 	const int max_node		=	pars.max_node;
-	double gamma		=	pars.gamma;
-	double pressure_exit	=	pars.pressure_exit;
+	const double gamma		=	pars.gamma;
+	const double pressure_exit	=	pars.pressure_exit;
 
 	//local vars
 	std::vector<double> &rho	=	vars.rho;
@@ -66,7 +66,7 @@ std::vector<double> Main_Corrector::calc_F_2_corrector(Parameters pars, Variable
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> U_1		=	vars.U_1;
@@ -84,6 +84,7 @@ std::vector<double> Main_Corrector::calc_F_2_corrector(Parameters pars, Variable
 		double temp_2	=	U_3[i] - 0.5*gamma*temp_1;
 
 		F_2_corrector[i]		=	temp_1 + ((gamma - 1)/(gamma))*temp_2;
+//		std::cout << i << " " << F_2_corrector[i] << " " << U_1[i] << " " << U_2[i] << " " << U_3[i] << std::endl;
 	}
 
 	return F_2_corrector;
@@ -94,7 +95,7 @@ std::vector<double> Main_Corrector::calc_F_3_corrector(Parameters pars, Variable
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> U_1		=	vars.U_1;
@@ -122,7 +123,7 @@ std::vector<double> Main_Corrector::calc_J_2_corrector(Parameters pars, Variable
 
 	//local pars
 	const int max_node	=	pars.max_node;
-	double gamma	=	pars.gamma;
+	const double gamma	=	pars.gamma;
 
 	//local vars
 	std::vector<double> area	=	vars.area;
@@ -183,7 +184,6 @@ std::vector<double> Main_Corrector::calc_dU_2_dt_corrector(Parameters pars, Vari
 	for (auto i = 1; i < max_node - 1; i++) {
 	//for (auto i = 1; i < max_node; i++) {
 		dU_2_dt_corrector[i]	=	-1*((F_2[i] - F_2[i-1])/delta_x[i-1]) + J_2[i];
-//		std::cout << i << " " << dU_2_dt_corrector[i] << " " << F_2[i] << " " << F_2[i-1] << " " << J_2[i] << " " << delta_x[i-1] << std::endl;
 	}
 
 	return dU_2_dt_corrector;
@@ -228,8 +228,8 @@ std::vector<double> Main_Corrector::calc_S_1_corrector(Parameters pars, Variable
 	for (auto i = 1; i < max_node - 1; i++) {
 	
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
-		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
-		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i+1];
+		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
+		double temp_3	=	U_1[i+1] - 2*U_1[i] + U_1[i-1];
 
 		S_1[i]	=	C_x*(temp_1/temp_2)*temp_3;
 	}
@@ -254,10 +254,10 @@ std::vector<double> Main_Corrector::calc_S_2_corrector(Parameters pars, Variable
 	for (auto i = 1; i < max_node - 1; i++) {
 	
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
-		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
-		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i+1];
+		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
+		double temp_3	=	U_2[i+1] - 2*U_2[i] + U_2[i-1];
 
-		S_2[i]	=	C_x*(temp_2/temp_2)*temp_3;
+		S_2[i]	=	C_x*(temp_1/temp_2)*temp_3;
 	}
 
 	return S_2;
@@ -280,10 +280,10 @@ std::vector<double> Main_Corrector::calc_S_3_corrector(Parameters pars, Variable
 	for (auto i = 1; i < max_node - 1; i++) {
 	
 		double temp_1	=	std::abs(p[i+1] - 2*p[i] + p[i-1]);
-		double temp_2	=	p[i+1] + 2*p[i] + p[i+1];
-		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i+1];
+		double temp_2	=	p[i+1] + 2*p[i] + p[i-1];
+		double temp_3	=	U_3[i+1] - 2*U_3[i] + U_3[i-1];
 
-		S_3[i]	=	C_x*(temp_3/temp_3)*temp_3;
+		S_3[i]	=	C_x*(temp_1/temp_2)*temp_3;
 	}
 
 	return S_3;

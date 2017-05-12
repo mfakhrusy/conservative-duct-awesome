@@ -41,6 +41,9 @@ struct Variables {
 	//delta x and delta t
 	std::vector<double> delta_x;	//use vector in case delta_x is different each node
 	double delta_t;
+
+	//number of iteration
+	int count_iter;
 };
 
 struct Parameters {

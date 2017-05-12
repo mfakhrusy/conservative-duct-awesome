@@ -28,9 +28,9 @@ int main() {
 	Post_Output post_output;
 
 	//local pars
-	double max_node		=	pars.max_node;
-	double error_max	=	pars.error_max;
-
+	const int max_node	=	pars.max_node;
+	const double error_max	=	pars.error_max;
+	const int max_iter	=	pars.max_iter;
 	//local vars
 	std::vector<double> &x			=	vars.x;		//length
 	std::vector<double> &area		=	vars.area;	//area of duct
@@ -61,6 +61,8 @@ int main() {
 	//delta x and delta t
 	std::vector<double> &delta_x		=	vars.delta_x;		//use vector in case delta_x is different each node
 	double &delta_t				=	vars.delta_t;
+	//num_iter > iteration count
+	int count_iter	=	vars.count_iter;
 	
 	//preserve old pressure
 	std::vector<double> old_p		=	p;
@@ -70,7 +72,9 @@ int main() {
 	double error_v;
 	double error_T;
 
-	int count = 0;
+	//initialize thing
+	//int count = 0;
+	count_iter = 0;
 
 	std::ofstream errors("output/errors.dat");
 	errors << "iteration error_rho error_v error_T" << std::endl;
@@ -80,8 +84,9 @@ int main() {
 
 	//looping process
 	do {
-		count++;
-		std::cout << "Iteration-" << count << std::endl;
+		//count++;
+		count_iter++;
+		std::cout << "Iteration-" << count_iter << std::endl;
 	
 		//---------- first -> main_initial ----------//
 		//calculate sound speed
@@ -92,12 +97,14 @@ int main() {
 		//---------- second -> main_predictor ----------//
 		
 		std::cout << "(Computing) Predictor Step . . ." << std::endl;
+
+		//bc outflow
+		//vars_predictor		=	main_predictor.bc_outflow_predictor(pars, vars_predictor);
+		vars			=	main_predictor.bc_outflow_predictor(pars, vars);
+
 		//copy vars into vars_predictor
 		Variables vars_predictor;
 		vars_predictor		=	vars;
-		
-		//bc outflow
-		vars_predictor		=	main_predictor.bc_outflow_predictor(pars, vars_predictor);
 		
 		//F_1 F_2 F_3 J_2
 		vars_predictor.F_1	=	main_predictor.calc_F_1_predictor(pars, vars_predictor);
@@ -105,7 +112,6 @@ int main() {
 		vars_predictor.F_3	=	main_predictor.calc_F_3_predictor(pars, vars_predictor);
 		vars_predictor.J_2	=	main_predictor.calc_J_2_predictor(pars, vars_predictor);
 		
-		//std::cout << "lala: " << vars_predictor.U_3[30] << " " << vars.U_3[30] << std::endl;
 		//time derivative
 		vars_predictor.dU_1_dt	=	main_predictor.calc_dU_1_dt_predictor(pars, vars_predictor);
 		vars_predictor.dU_2_dt	=	main_predictor.calc_dU_2_dt_predictor(pars, vars_predictor);
@@ -125,7 +131,6 @@ int main() {
 		vars_predictor.rho	=	main_predictor.calc_new_rho(pars, vars_predictor);
 		vars_predictor.T	=	main_predictor.calc_new_T(pars, vars_predictor);
 
-
 		//---------- third -> main_corrector ----------//
 		
 		std::cout << "(Computing) Corrector Step . . ." << std::endl;
@@ -135,6 +140,7 @@ int main() {
 	
 		//bc inflow
 		vars_corrector		=	main_corrector.bc_inflow_corrector(pars, vars_corrector);
+//		vars			=	main_corrector.bc_inflow_corrector(pars, vars);
 	
 		//F_1 F_2 F_3 J_2
 		vars_corrector.F_1	=	main_corrector.calc_F_1_corrector(pars, vars_corrector);
@@ -184,7 +190,8 @@ int main() {
 		rho		=	main_final.calc_new_rho(pars, vars);
 		v		=	main_final.calc_new_v(pars, vars);
 		T		=	main_final.calc_new_T(pars, vars);
-		p		=	main_final.calc_pressure(pars, vars);
+		//p		=	main_final.calc_pressure(pars, vars);
+		p		=	main_final.calc_pressure_v2(pars, vars);
 		mach		=	main_final.calc_mach(pars, vars);
 		mass_flow	=	main_final.calc_mass_flow(pars, vars);
 		
@@ -208,6 +215,7 @@ int main() {
 		post_output.print_vector(vars_predictor.v, "v_predictor");
 		
 		//CHECK SMOOTHED PREDICTED VALUE
+		
 		post_output.print_vector(vars_predictor.S_1, "S_1_predictor");
 		post_output.print_vector(vars_predictor.S_2, "S_2_predictor");
 		post_output.print_vector(vars_predictor.S_3, "S_3_predictor");
@@ -243,17 +251,16 @@ int main() {
 	
 		//calculate errors
 		//continuity -> rho
-		error_rho	=	main_final.calc_error(old_rho, rho);
-		error_v		=	main_final.calc_error(old_v, v);
-		error_T		=	main_final.calc_error(old_T, T);
+		error_rho	=	main_final.calc_error_rms(old_rho, rho);
+		error_v		=	main_final.calc_error_rms(old_v, v);
+		error_T		=	main_final.calc_error_rms(old_T, T);
 	
 		//print errors on external file
 	
-		errors << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+		errors << count_iter << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 
-		std::cout << count << " " << error_rho << " " << error_v << " " << error_T << std::endl;
-//		if (count >= 1) {
-		if (count >= 50000) {
+		std::cout << count_iter << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+		if (count_iter >= max_iter) {
 			std::cout << "Computation too long, program exit" << std::endl;
 			break;	
 		}
