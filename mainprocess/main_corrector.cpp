@@ -84,7 +84,6 @@ std::vector<double> Main_Corrector::calc_F_2_corrector(Parameters pars, Variable
 		double temp_2	=	U_3[i] - 0.5*gamma*temp_1;
 
 		F_2_corrector[i]		=	temp_1 + ((gamma - 1)/(gamma))*temp_2;
-//		std::cout << i << " " << F_2_corrector[i] << " " << U_1[i] << " " << U_2[i] << " " << U_3[i] << std::endl;
 	}
 
 	return F_2_corrector;

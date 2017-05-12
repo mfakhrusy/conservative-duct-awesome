@@ -21,7 +21,6 @@ Variables Main_Predictor::bc_outflow_predictor(Parameters pars, Variables vars) 
 
 	//BC for U_2
 	U_2[max_node - 1]	=	2*U_2[max_node - 2] - U_2[max_node - 3];
-//	std::cout << "BC U_2: " << U_2[max_node - 1] << " " << U_2[max_node - 2] << " " << U_2[max_node - 3] << std::endl;
 
 	//BC for v
 	v[max_node - 1]		=	U_2[max_node - 1]/U_1[max_node - 1];
