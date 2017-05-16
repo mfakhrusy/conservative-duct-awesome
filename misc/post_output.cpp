@@ -28,19 +28,19 @@ void Post_Output::print_result(int max_node, Variables vars) {
 	std::vector<double> mach	=	vars.mach;
 	std::vector<double> mass_flow	=	vars.mass_flow;
 
-	std::ofstream output_file("output/output_table.dat");
-	output_file << "n x area density velocity temperature pressure mach mass_flow" << std::endl;
+	std::ofstream output_file("output/output_table.csv");
+	output_file << "n,x,area,density,velocity,temperature,pressure,mach,mass_flow" << std::endl;
 	for (auto i = 0; i < max_node; i++) {
 		
-		output_file << i << " ";
-		output_file << x[i] << " ";
-		output_file << area[i] << " ";
-		output_file << rho[i] << " ";
-		output_file << v[i] << " ";
-		output_file << T[i] << " ";
-		output_file << p[i] << " ";
-		output_file << mach[i] << " ";
-		output_file << mass_flow[i] << " ";
+		output_file << i << ",";
+		output_file << x[i] << ",";
+		output_file << area[i] << ",";
+		output_file << rho[i] << ",";
+		output_file << v[i] << ",";
+		output_file << T[i] << ",";
+		output_file << p[i] << ",";
+		output_file << mach[i] << ",";
+		output_file << mass_flow[i];
 		output_file << std::endl;
 	}
 

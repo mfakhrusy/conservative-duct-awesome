@@ -76,8 +76,8 @@ int main() {
 	//int count = 0;
 	count_iter = 0;
 
-	std::ofstream errors("output/errors.dat");
-	errors << "iteration error_rho error_v error_T" << std::endl;
+	std::ofstream errors("output/errors.csv");
+	errors << "iteration,error_rho,error_v,error_T" << std::endl;
 
 	//resize some variables
 	p.resize(max_node);
@@ -257,7 +257,7 @@ int main() {
 	
 		//print errors on external file
 	
-		errors << count_iter << " " << error_rho << " " << error_v << " " << error_T << std::endl;
+		errors << count_iter << "," << error_rho << "," << error_v << "," << error_T << std::endl;
 
 		std::cout << count_iter << " " << error_rho << " " << error_v << " " << error_T << std::endl;
 		if (count_iter >= max_iter) {
