@@ -28,9 +28,12 @@ int main() {
 	Post_Output post_output;
 
 	//local pars
-	const int max_node	=	pars.max_node;
+	const int max_node		=	pars.max_node;
+	const int max_iter		=	pars.max_iter;
 	const double error_max	=	pars.error_max;
-	const int max_iter	=	pars.max_iter;
+	const double C_x		=	pars.smoothing_constant;
+	const double P_e		=	pars.pressure_exit;
+
 	//local vars
 	std::vector<double> &x			=	vars.x;		//length
 	std::vector<double> &area		=	vars.area;	//area of duct
@@ -76,7 +79,16 @@ int main() {
 	//int count = 0;
 	count_iter = 0;
 
-	std::ofstream errors("output/errors.csv");
+	//change C_x and P_e into string
+	auto C_x_str	=	std::to_string(C_x);
+	auto P_e_str	=	std::to_string(P_e);
+	//delete trailing zeros
+	C_x_str.erase(C_x_str.find_last_not_of('0') + 1, std::string::npos);
+	P_e_str.erase(P_e_str.find_last_not_of('0') + 1, std::string::npos);
+
+
+//	std::ofstream errors("output/errors.csv");
+	std::ofstream errors("output/errors_Cx" + C_x_str + "_Pe" + P_e_str + ".csv");
 	errors << "iteration,error_rho,error_v,error_T" << std::endl;
 
 	//resize some variables
@@ -247,7 +259,7 @@ int main() {
 		post_output.print_vector(T, "T");
 
 		//PRINT RESULT
-		post_output.print_result(max_node, vars);
+		post_output.print_result(pars, vars);
 	
 		//calculate errors
 		//continuity -> rho

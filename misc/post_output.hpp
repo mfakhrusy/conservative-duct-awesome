@@ -5,7 +5,7 @@ class Post_Output {
 
 	public:
 		void print_vector(std::vector<double> var, std::string var_name);
-		void print_result(int max_node, Variables vars);
+		void print_result(Parameters pars, Variables vars);
 
 };
 

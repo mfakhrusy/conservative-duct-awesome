@@ -3,6 +3,7 @@
 *.aux
 *.log
 .~lock*
+*.png
 dump/
 output_dump/
 result.dat
