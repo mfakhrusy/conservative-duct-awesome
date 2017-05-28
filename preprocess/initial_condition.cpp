@@ -16,9 +16,6 @@ Initial_Condition::Initial_Condition(Parameters pars, Variables &vars) {
 	//computation of initial conditions: default is for shock
 	rho	=	calc_initial_condition_rho(pars, vars);
 	T	=	calc_initial_condition_T(pars, vars);
-//	rho and T below is for conservative non-shock!
-//	rho	=	calc_initial_condition_rho_2(pars, vars);
-//	T	=	calc_initial_condition_T_2(pars, vars);
 	v	=	calc_initial_condition_v(pars, vars);
 	p	=	calc_initial_condition_p(pars, vars);
 	U_1	=	calc_initial_condition_U_1(pars, vars);
@@ -44,7 +41,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_rho(Parameters par
 	std::vector<double> rho(max_node);
 
 	//processing
-	//for (auto i = 1; i < rho.size() - 1; i++) {
 	for (auto i = 0; i < rho.size(); i++) {
 		
 		if (x[i] >= limit_0 && x[i] <= limit_1) {
@@ -81,7 +77,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_T(Parameters pars,
 	std::vector<double> T(max_node);
 
 	//processing
-	//for (auto i = 1; i < T.size() - 1; i++) {
 	for (auto i = 0; i < T.size(); i++) {
 		
 		if (x[i] >= limit_0 && x[i] <= limit_1) {
@@ -115,7 +110,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_v(Parameters pars,
 	std::vector<double> v(max_node);
 
 	//processing
-	//for (auto i = 1; i < v.size() - 1; i++) {
 	for (auto i = 0; i < v.size(); i++) {
 
 		v[i]	=	U_2_constant_value/(rho[i]*area[i]);
@@ -137,7 +131,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_p(Parameters pars,
 	std::vector<double> pressure(max_node);
 
 	const double temp	=	gamma/(gamma - 1);
-	//for (auto i = 1; i < max_node - 1; i++) {
 	for (auto i = 0; i < max_node; i++) {
 	
 		pressure[i]	=	pow(T[i], temp);
@@ -160,7 +153,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_U_1(Parameters par
 	std::vector<double> U_1(max_node);
 
 	//processing
-	//for (auto i = 1; i < U_1.size() - 1; i++) {
 	for (auto i = 0; i < U_1.size(); i++) {
 		U_1[i]	=	rho[i]*area[i];
 	}
@@ -183,7 +175,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_U_2(Parameters par
 	std::vector<double> U_2(max_node);
 
 	//processing
-	//for (auto i = 1; i < U_2.size() - 1; i++) {
 	for (auto i = 0; i < U_2.size(); i++) {
 		U_2[i]	=	rho[i]*area[i]*v[i];
 	}
@@ -237,7 +228,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_rho_2(Parameters p
 	std::vector<double> rho(max_node);
 
 	//processing
-	//for (auto i = 1; i < rho.size() - 1; i++) {
 	for (auto i = 0; i < rho.size(); i++) {
 		
 		if (x[i] >= limit_0 && x[i] <= limit_1) {
@@ -271,7 +261,6 @@ std::vector<double> Initial_Condition::calc_initial_condition_T_2(Parameters par
 	std::vector<double> T(max_node);
 
 	//processing
-	//for (auto i = 1; i < T.size() - 1; i++) {
 	for (auto i = 0; i < T.size(); i++) {
 		
 		if (x[i] >= limit_0 && x[i] <= limit_1) {

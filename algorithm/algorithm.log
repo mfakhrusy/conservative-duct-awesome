@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.4.26)  28 MAY 2017 10:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.4.26)  28 MAY 2017 10:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -343,7 +343,7 @@ f-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.p
 fb>
-Output written on algorithm.pdf (5 pages, 118300 bytes).
+Output written on algorithm.pdf (5 pages, 118298 bytes).
 PDF statistics:
  64 PDF objects out of 1000 (max. 8388607)
  45 compressed objects within 1 object stream

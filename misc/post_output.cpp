@@ -36,6 +36,7 @@ void Post_Output::print_result(Parameters pars, Variables vars) {
 	//change C_x and P_e into string
 	auto C_x_str	=	std::to_string(C_x);
 	auto P_e_str	=	std::to_string(P_e);
+
 	//delete trailing zeros
 	C_x_str.erase(C_x_str.find_last_not_of('0') + 1, std::string::npos);
 	P_e_str.erase(P_e_str.find_last_not_of('0') + 1, std::string::npos);

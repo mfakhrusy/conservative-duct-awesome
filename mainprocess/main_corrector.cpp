@@ -53,7 +53,6 @@ std::vector<double> Main_Corrector::calc_F_1_corrector(Parameters pars, Variable
 
 	//process F_1_corrector
 	for (auto i = 0; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
 		
 		F_1_corrector[i]	=	U_2[i];
 	}
@@ -78,7 +77,6 @@ std::vector<double> Main_Corrector::calc_F_2_corrector(Parameters pars, Variable
 
 	//process F_2_corrector
 	for (auto i = 0; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
 		
 		double temp_1	=	pow(U_2[i],2)/U_1[i];
 		double temp_2	=	U_3[i] - 0.5*gamma*temp_1;
@@ -106,7 +104,6 @@ std::vector<double> Main_Corrector::calc_F_3_corrector(Parameters pars, Variable
 
 	//process F_3_corrector
 	for (auto i = 0; i < max_node - 1; i++) {
-	//for (auto i = 0; i < max_node; i++) {
 		
 		double temp_1	=	U_2[i]*U_3[i]/U_1[i];
 		double temp_2	=	pow(U_2[i],3)/pow(U_1[i],2);
@@ -134,7 +131,6 @@ std::vector<double> Main_Corrector::calc_J_2_corrector(Parameters pars, Variable
 
 	//process J_2
 	for (auto i = 1; i < max_node - 1; i++) {
-//	for (auto i = 0; i < max_node - 1; i++) {
 		
 		double temp_1	=	(area[i] - area[i-1])/(x[i] - x[i-1]);
 		J_2[i]		=	(1/gamma)*rho[i]*T[i]*temp_1;
@@ -158,7 +154,6 @@ std::vector<double> Main_Corrector::calc_dU_1_dt_corrector(Parameters pars, Vari
 
 	//process dU_1_dt_corrector
 	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 1; i < max_node; i++) {
 		dU_1_dt_corrector[i]	=	-1*((F_1[i] - F_1[i-1])/delta_x[i-1]);
 	}
 
@@ -181,7 +176,6 @@ std::vector<double> Main_Corrector::calc_dU_2_dt_corrector(Parameters pars, Vari
 
 	//process dU_2_dt_corrector
 	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 1; i < max_node; i++) {
 		dU_2_dt_corrector[i]	=	-1*((F_2[i] - F_2[i-1])/delta_x[i-1]) + J_2[i];
 	}
 
@@ -203,7 +197,6 @@ std::vector<double> Main_Corrector::calc_dU_3_dt_corrector(Parameters pars, Vari
 
 	//process dU_3_dt_corrector
 	for (auto i = 1; i < max_node - 1; i++) {
-	//for (auto i = 1; i < max_node; i++) {
 		dU_3_dt_corrector[i]	=	-1*((F_3[i] - F_3[i-1])/delta_x[i-1]);
 	}
 
