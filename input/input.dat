@@ -6,5 +6,5 @@
 286.9	gas_constant_SI_air
 0.5		courant_number
 0.59	U_2_constant_value
-0.1		pressure_exit
-0.2 	smoothing_constant
+0.6784	pressure_exit
+0.0 	smoothing_constant
